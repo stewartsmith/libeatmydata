@@ -1,7 +1,7 @@
 all: libs fsynctest
 
 libs: eatmydata.c
-	gcc -shared -Wl,-soname,libeatmydata.so.1 -o libeatmydata.so.1.0  eatmydata.c 
+	gcc -shared -Wl,-soname,libeatmydata.so.1  -ldl -o libeatmydata.so.1.0  eatmydata.c 
 	rm libeatmydata.so.1 libeatmydata.so
 	ln -s libeatmydata.so.1.0 libeatmydata.so.1
 	ln -s libeatmydata.so.1 libeatmydata.so

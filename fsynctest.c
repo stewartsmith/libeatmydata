@@ -7,7 +7,7 @@
 int main(int argc, char* argv[])
 {
 	int fd;
-	fd= open(argv[0],O_RDONLY);
+	fd= open(argv[0],O_RDONLY|O_SYNC);
 	fsync(fd);
 	close(fd);
 	return 0;
