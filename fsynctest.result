@@ -1,2 +1,2 @@
-execve("./fsynctest", ["./fsynctest"], [/* 49 vars */]) = 0
+execve("./fsynctest", ["./fsynctest"], [/*  */]) = 0
 open("./fsynctest", O_RDONLY)           = 3

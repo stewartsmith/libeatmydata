@@ -22,7 +22,7 @@
 int main(int argc, char* argv[])
 {
 	int fd;
-	fd= open(argv[0],O_RDONLY|O_SYNC);
+	fd= open(argv[0],O_RDONLY|O_SYNC|O_DSYNC);
 	fsync(fd);
 	close(fd);
 	return 0;

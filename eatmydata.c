@@ -23,6 +23,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <dlfcn.h>
+#include <stdarg.h>
 
 int errno;
 
@@ -34,14 +35,21 @@ int fsync(int fd)
 
 int open(const char* pathname, int flags, ...)
 {
+	va_list ap;
+	mode_t mode;
 	int (*libc_open)(const char*,int,...);
+
+	va_start(ap, flags);
+	mode= va_arg(ap, mode_t);
+	va_end(ap);
+
 	*(void**)(&libc_open) = dlsym(RTLD_NEXT, "open");
 	if(dlerror()) {
 		errno = EACCES;
 		return -1;
 	}
 
-	flags &= !(O_SYNC|O_DSYNC);
+	flags &= ~(O_SYNC|O_DSYNC);
 
-	return (*libc_open)(pathname,flags);
+	return (*libc_open)(pathname,flags,mode);
 }
