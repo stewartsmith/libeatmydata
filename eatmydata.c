@@ -53,3 +53,9 @@ int open(const char* pathname, int flags, ...)
 
 	return (*libc_open)(pathname,flags,mode);
 }
+
+int fdatasync(int fd)
+{
+	errno= 0;
+	return 0;
+}
