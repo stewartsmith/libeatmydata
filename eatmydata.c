@@ -42,6 +42,11 @@ int fsync(int fd)
 	return 0;
 }
 
+/* no errors are defined for this function */
+void sync(void)
+{
+}
+
 int open(const char* pathname, int flags, ...)
 {
 	va_list ap;
