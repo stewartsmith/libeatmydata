@@ -27,6 +27,15 @@
 
 int errno;
 
+static int (*libc_open)(const char*, int, ...);
+
+void __attribute__ ((constructor)) eatmydata_init(void)
+{
+        libc_open = dlsym(RTLD_NEXT, "open");
+        if (!libc_open || dlerror())
+                _exit(1);
+}
+
 int fsync(int fd)
 {
 	errno=0;
@@ -37,17 +46,10 @@ int open(const char* pathname, int flags, ...)
 {
 	va_list ap;
 	mode_t mode;
-	int (*libc_open)(const char*,int,...);
 
 	va_start(ap, flags);
 	mode= va_arg(ap, mode_t);
 	va_end(ap);
-
-	*(void**)(&libc_open) = dlsym(RTLD_NEXT, "open");
-	if(dlerror()) {
-		errno = EACCES;
-		return -1;
-	}
 
 	flags &= ~(O_SYNC|O_DSYNC);
 
