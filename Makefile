@@ -16,6 +16,7 @@ test: runfsynctest
 
 runfsynctest:
 	LD_PRELOAD=./libeatmydata.so strace -o fsynctest.result.run ./fsynctest
+	! fgrep 'sync()' fsynctest.result.run
 	grep fsync fsynctest.result.run |sed -e 's%[0-9]* vars%%' > fsynctest.result.run.out
 	mv fsynctest.result.run.out fsynctest.result.run
 	diff fsynctest.result fsynctest.result.run

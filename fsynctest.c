@@ -25,6 +25,7 @@ int main(int argc, char* argv[])
 	fd= open(argv[0],O_RDONLY|O_SYNC|O_DSYNC);
 	fsync(fd);
 	fdatasync(fd);
+	sync();
 	close(fd);
 	return 0;
 }
