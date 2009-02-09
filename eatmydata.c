@@ -27,7 +27,7 @@
 
 int errno;
 
-static int (*libc_open)(const char*, int, ...);
+static int (*libc_open)(const char*, int, ...)= NULL;
 
 void __attribute__ ((constructor)) eatmydata_init(void)
 {
@@ -57,6 +57,9 @@ int open(const char* pathname, int flags, ...)
 	va_end(ap);
 
 	flags &= ~(O_SYNC|O_DSYNC);
+
+	if(!libc_open)
+		eatmydata_init();
 
 	return (*libc_open)(pathname,flags,mode);
 }
