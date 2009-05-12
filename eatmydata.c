@@ -69,3 +69,9 @@ int fdatasync(int fd)
 	errno= 0;
 	return 0;
 }
+
+int msync(void *addr, size_t length, int flags)
+{
+	errno = 0;
+	return 0;
+}
