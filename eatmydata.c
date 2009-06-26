@@ -13,6 +13,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/* 
+#define CHECK_FILE "/tmp/eatmydata"
+*/
+
 #ifndef RTLD_NEXT
 #  define _GNU_SOURCE
 #endif
@@ -28,23 +32,64 @@
 int errno;
 
 static int (*libc_open)(const char*, int, ...)= NULL;
+static int (*libc_fsync)(int)= NULL;
+static int (*libc_sync)()= NULL;
+static int (*libc_fdatasync)(int)= NULL;
+static int (*libc_msync)(void*, size_t, int)= NULL;
 
+#define ASSIGN_DLSYM_OR_DIE(name)			\
+        libc_##name = dlsym(RTLD_NEXT, #name);			\
+        if (!libc_##name || dlerror())				\
+                _exit(1);
+    
 void __attribute__ ((constructor)) eatmydata_init(void)
 {
-        libc_open = dlsym(RTLD_NEXT, "open");
-        if (!libc_open || dlerror())
-                _exit(1);
+        ASSIGN_DLSYM_OR_DIE(open);
+	ASSIGN_DLSYM_OR_DIE(fsync);
+	ASSIGN_DLSYM_OR_DIE(sync);
+	ASSIGN_DLSYM_OR_DIE(fdatasync);
+	ASSIGN_DLSYM_OR_DIE(msync);
+}
+
+int eatmydata_is_hungry(void)
+{
+	/* Init here, as it is called before any libc functions */
+	if(!libc_open)
+		eatmydata_init();
+
+#ifdef CHECK_FILE
+	static struct stat buf;
+	int old_errno, stat_ret;
+
+	old_errno= errno;
+	stat_ret= stat(CHECK_FILE, &buf);
+	errno= old_errno;
+
+	/* Treat any error as if file doesn't exist, for safety */
+	return !stat_ret;
+#else
+	/* Always hungry! */
+	return 1;
+#endif
 }
 
 int fsync(int fd)
 {
-	errno=0;
-	return 0;
+	if (eatmydata_is_hungry()) {
+		errno= 0;
+		return 0;
+	}
+
+	return (*libc_fsync)(fd);
 }
 
 /* no errors are defined for this function */
 void sync(void)
 {
+	if (eatmydata_is_hungry())
+		return;
+
+	(*libc_sync)();
 }
 
 int open(const char* pathname, int flags, ...)
@@ -56,22 +101,28 @@ int open(const char* pathname, int flags, ...)
 	mode= va_arg(ap, mode_t);
 	va_end(ap);
 
-	flags &= ~(O_SYNC|O_DSYNC);
-
-	if(!libc_open)
-		eatmydata_init();
+	if (eatmydata_is_hungry())
+		flags &= ~(O_SYNC|O_DSYNC);
 
 	return (*libc_open)(pathname,flags,mode);
 }
 
 int fdatasync(int fd)
 {
-	errno= 0;
-	return 0;
+	if (eatmydata_is_hungry()) {
+		errno= 0;
+		return 0;
+	}
+
+	return (*libc_fdatasync)(fd);
 }
 
 int msync(void *addr, size_t length, int flags)
 {
-	errno = 0;
-	return 0;
+	if (eatmydata_is_hungry()) {
+		errno= 0;
+		return 0;
+	}
+
+	return (*libc_msync)(addr, length, flags);
 }
