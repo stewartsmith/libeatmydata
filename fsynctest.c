@@ -18,21 +18,33 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <assert.h>
+#include <errno.h>
 
 int main(int argc, char* argv[])
 {
 	int fd;
 	int i;
-	fd= open(argv[0],O_RDONLY|O_SYNC|O_DSYNC);
+	fd= open("fsynctestdata",O_CREAT|O_RDWR|O_SYNC|O_DSYNC);
+	assert(fd > 0);
+	assert(errno == 0);
 	for (i = 0; i < 1000; ++i) {
 		write(fd, "a", 1);
+		assert(errno == 0);
 		fsync(fd);
+		assert(errno == 0);
 		write(fd, "a", 1);
+		assert(errno == 0);
 		fdatasync(fd);
+		assert(errno == 0);
 		write(fd, "a", 1);
+		assert(errno == 0);
 		sync();
+		assert(errno == 0);
 	}
 	close(fd);
+	unlink("fsynctestdata");
 	msync(0,0,0);
+	assert(errno == 0);
 	return 0;
 }
