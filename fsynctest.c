@@ -22,10 +22,16 @@
 int main(int argc, char* argv[])
 {
 	int fd;
+	int i;
 	fd= open(argv[0],O_RDONLY|O_SYNC|O_DSYNC);
-	fsync(fd);
-	fdatasync(fd);
-	sync();
+	for (i = 0; i < 1000; ++i) {
+		write(fd, "a", 1);
+		fsync(fd);
+		write(fd, "a", 1);
+		fdatasync(fd);
+		write(fd, "a", 1);
+		sync();
+	}
 	close(fd);
 	msync(0,0,0);
 	return 0;
