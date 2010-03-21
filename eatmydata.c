@@ -41,10 +41,10 @@ static int (*libc_msync)(void*, size_t, int)= NULL;
         libc_##name = dlsym(RTLD_NEXT, #name);			\
         if (!libc_##name || dlerror())				\
                 _exit(1);
-    
+
 void __attribute__ ((constructor)) eatmydata_init(void)
 {
-        ASSIGN_DLSYM_OR_DIE(open);
+	ASSIGN_DLSYM_OR_DIE(open);
 	ASSIGN_DLSYM_OR_DIE(fsync);
 	ASSIGN_DLSYM_OR_DIE(sync);
 	ASSIGN_DLSYM_OR_DIE(fdatasync);
@@ -100,6 +100,13 @@ int open(const char* pathname, int flags, ...)
 	va_start(ap, flags);
 	mode= va_arg(ap, mode_t);
 	va_end(ap);
+
+	/* In pthread environments the dlsym() may call our open(). */
+	/* We simply ignore it because libc is already loaded       */
+	if (!libc_open) {
+		errno = EFAULT;
+		return -1;
+	}
 
 	if (eatmydata_is_hungry())
 		flags &= ~(O_SYNC|O_DSYNC);
