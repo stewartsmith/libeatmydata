@@ -30,7 +30,7 @@ noinst_HEADERS =
 pkgplugin_LTLIBRARIES =
 CLEANFILES =
 EXTRA_DIST = \
-  fsynctest.result \ 
+  fsynctest.result \
   docs/Doxyfile \
   docs/header.html.in \
   test_run.sh
@@ -57,7 +57,7 @@ liblibeatmydata_la_LIBADD = $(LIBDL_LIBS)
 liblibeatmydata_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(LIBLIBEATMYDATA_VERSION)
 
 check_PROGRAMS += \
-  libeatmydata/test/fsynctest.c
+  libeatmydata/test/fsynctest
 
 #
 # Simple libeatmydata application
