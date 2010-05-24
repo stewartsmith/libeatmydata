@@ -17,7 +17,7 @@
 ### END LICENSE
 
 ACLOCAL_AMFLAGS = -I m4
-LDADD = liblibeatmydata.la
+LDADD = libeatmydata.la
 
 
 bin_PROGRAMS =
@@ -37,24 +37,24 @@ EXTRA_DIST = \
 
 
 #
-# liblibeatmydata
+# libeatmydata
 #
 
-lib_LTLIBRARIES += liblibeatmydata.la
+lib_LTLIBRARIES += libeatmydata.la
 
-liblibeatmydata_la_SOURCES = \
+libeatmydata_la_SOURCES = \
   libeatmydata/libeatmydata.c
 
 noinst_HEADERS += \
   libeatmydata/visibility.h
 
-liblibeatmydata_la_CFLAGS = \
+libeatmydata_la_CFLAGS = \
 	$(AM_CFLAGS) \
   $(NO_WERROR) \
 	-DBUILDING_LIBEATMYDATA
 
-liblibeatmydata_la_LIBADD = $(LIBDL_LIBS)
-liblibeatmydata_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(LIBLIBEATMYDATA_VERSION)
+libeatmydata_la_LIBADD = $(LIBDL_LIBS)
+libeatmydata_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(LIBEATMYDATA_VERSION)
 
 check_PROGRAMS += \
   libeatmydata/test/fsynctest
