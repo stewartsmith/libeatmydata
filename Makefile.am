@@ -7,7 +7,7 @@ libeatmydata_la_CFLAGS = ${AM_CFLAGS} ${NO_WERROR}
 libeatmydata_la_LDFLAGS = -version-info 1:0:0
 libeatmydata_la_LIBADD = ${LIBDL_LIBS}
 
-EXTRA_DIST = LICENSE
+EXTRA_DIST = LICENSE test_run.sh
 
 check_PROGRAMS = fsynctest_eatmydata
 
