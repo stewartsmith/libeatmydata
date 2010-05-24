@@ -1,25 +1,20 @@
-/*
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+/* BEGIN LICENSE
+ * Copyright (C) 2008-2010 Stewart Smith <stewart@flamingspork.com>
+ * This program is free software: you can redistribute it and/or modify it 
+ * under the terms of the GNU General Public License version 3, as published 
+ * by the Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranties of 
+ * MERCHANTABILITY, SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR 
+ * PURPOSE.  See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along 
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * END LICENSE */
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/* 
-#define CHECK_FILE "/tmp/eatmydata"
-*/
-
-#ifndef RTLD_NEXT
-#  define _GNU_SOURCE
-#endif
+#include "config.h"
+#include "libeatmydata/visibility.h"
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -29,13 +24,10 @@
 #include <dlfcn.h>
 #include <stdarg.h>
 
-#if __GNUC__ >= 4
-  #define DLL_PUBLIC __attribute__ ((visibility("default")))
-  #define DLL_LOCAL  __attribute__ ((visibility("hidden")))
-#else
-  #define DLL_PUBLIC
-  #define DLL_LOCAL
-#endif
+/* 
+#define CHECK_FILE "/tmp/eatmydata"
+*/
+
 
 int errno;
 
@@ -50,7 +42,7 @@ static int (*libc_msync)(void*, size_t, int)= NULL;
         if (!libc_##name || dlerror())				\
                 _exit(1);
 
-int DLL_PUBLIC msync(void *addr, size_t length, int flags);
+int LIBEATMYDATA_API msync(void *addr, size_t length, int flags);
 
 void __attribute__ ((constructor)) eatmydata_init(void);
 
@@ -85,7 +77,7 @@ static int eatmydata_is_hungry(void)
 #endif
 }
 
-int DLL_PUBLIC fsync(int fd)
+int LIBEATMYDATA_API fsync(int fd)
 {
 	if (eatmydata_is_hungry()) {
 		errno= 0;
@@ -96,7 +88,7 @@ int DLL_PUBLIC fsync(int fd)
 }
 
 /* no errors are defined for this function */
-void DLL_PUBLIC sync(void)
+void LIBEATMYDATA_API sync(void)
 {
 	if (eatmydata_is_hungry())
 		return;
@@ -104,7 +96,7 @@ void DLL_PUBLIC sync(void)
 	(*libc_sync)();
 }
 
-int DLL_PUBLIC open(const char* pathname, int flags, ...)
+int LIBEATMYDATA_API open(const char* pathname, int flags, ...)
 {
 	va_list ap;
 	mode_t mode;
@@ -126,7 +118,7 @@ int DLL_PUBLIC open(const char* pathname, int flags, ...)
 	return (*libc_open)(pathname,flags,mode);
 }
 
-int DLL_PUBLIC fdatasync(int fd)
+int LIBEATMYDATA_API fdatasync(int fd)
 {
 	if (eatmydata_is_hungry()) {
 		errno= 0;
@@ -136,7 +128,7 @@ int DLL_PUBLIC fdatasync(int fd)
 	return (*libc_fdatasync)(fd);
 }
 
-int DLL_PUBLIC msync(void *addr, size_t length, int flags)
+int LIBEATMYDATA_API msync(void *addr, size_t length, int flags)
 {
 	if (eatmydata_is_hungry()) {
 		errno= 0;

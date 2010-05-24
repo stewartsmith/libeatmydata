@@ -1,14 +1,57 @@
-AC_PREREQ(2.52)
+#
+# Libeatmydata
+#
+# Copyright (C) 2009-2010 Monty Taylor, Eric Day
+# All rights reserved.
+#
+# Use and distribution licensed under the BSD license.  See
+# the COPYING file in this directory for full text.
+#
+
 
 AC_INIT([libeatmydata],[1.0], [http://www.flamingspork.com/projects/libeatmydata])
-AC_CONFIG_SRCDIR([eatmydata.c])
+AC_CONFIG_SRCDIR([libeatmydata/libeatmydata.c])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([m4])
 
 PANDORA_CANONICAL_TARGET(less-warnings)
+
+# Increment if interfaces have been added, removed, or changed.
+LIBLIBEATMYDATA_VERSION_CURRENT=1
+
+# Increment if source code has changed, set to zero if current is incremented.
+LIBLIBEATMYDATA_VERSION_REVISION=0
+
+# Increment if interfaces have been added, set to zero if interfaces have been
+# removed or changed.
+LIBLIBEATMYDATA_VERSION_AGE=0
+
+AC_SUBST(LIBLIBEATMYDATA_VERSION_CURRENT)
+AC_SUBST(LIBLIBEATMYDATA_VERSION_REVISION)
+AC_SUBST(LIBLIBEATMYDATA_VERSION_AGE)
+
+AC_DEFINE_UNQUOTED([LIBLIBEATMYDATA_VERSION_CURRENT],
+                   [$LIBLIBEATMYDATA_VERSION_CURRENT],
+                   [Current portion of liblibeatmydata version])
+AC_DEFINE_UNQUOTED([LIBLIBEATMYDATA_VERSION_REVISION],
+                   [$LIBLIBEATMYDATA_VERSION_REVISION],
+                   [Revision portion of liblibeatmydata version])
+AC_DEFINE_UNQUOTED([LIBLIBEATMYDATA_VERSION_AGE],
+                   [$LIBLIBEATMYDATA_VERSION_AGE],
+                   [Age portion of liblibeatmydata version])
+
+LIBLIBEATMYDATA_VERSION=$LIBLIBEATMYDATA_VERSION_CURRENT:$LIBLIBEATMYDATA_VERSION_REVISION:$LIBLIBEATMYDATA_VERSION_AGE
+
+AC_SUBST(LIBLIBEATMYDATA_VERSION)
+
 PANDORA_REQUIRE_LIBDL
 
-AC_CONFIG_FILES(Makefile)
+PANDORA_PLUGINS
+
+AC_DEFINE_UNQUOTED([LIBEATMYDATA_MODULE_EXT], ["$acl_cv_shlibext"],
+                   [Extension to use for modules.])
+
+AC_CONFIG_FILES(Makefile docs/header.html)
 
 AC_OUTPUT
 
@@ -21,8 +64,16 @@ echo "   * Host CPU:                  $host_cpu"
 echo "   * C Compiler:                $CC_VERSION"
 echo "   * Assertions enabled:        $ac_cv_assert"
 echo "   * Debug enabled:             $with_debug"
-echo "   * Warnings as failure:       $ac_cv_warnings_as_errors"
+echo "   * Profiling enabled:         $ac_profiling"
+echo "   * Coverage enabled:          $ac_coverage"
+echo "   * Warnings as errors:        $ac_cv_warnings_as_errors"
+echo "   * Configured modules:"
+echo ""
+
+for module in `echo $PANDORA_PLUGIN_LIST | sed 's/_/::/g' | tr ',' '\n' | sort`
+do
+  echo "     - $module"
+done
+
 echo ""
 echo "---"
-
-
