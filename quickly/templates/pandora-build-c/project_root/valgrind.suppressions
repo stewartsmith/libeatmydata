@@ -1,0 +1,15 @@
+{
+  dlopen memory leak
+  Memcheck:Leak
+  fun:*alloc
+  ...
+  fun:dlopen*
+}
+
+{
+  dlerror memory leak
+  Memcheck:Leak
+  fun:*alloc
+  ...
+  fun:*dlerror*
+}

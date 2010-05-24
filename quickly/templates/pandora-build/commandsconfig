@@ -1,0 +1,10 @@
+# define parameters for commands, putting them in a list seperated
+# by ';'
+# if nothing specified, default is to launch command inside a project
+# only and not be followed by a template
+COMMANDS_LAUNCHED_IN_OR_OUTSIDE_PROJECT = tutorial
+COMMANDS_LAUNCHED_OUTSIDE_PROJECT_ONLY = create
+COMMANDS_FOLLOWED_BY_COMMAND = 
+
+[ubuntu-application]
+IMPORT=package;release;save;share
