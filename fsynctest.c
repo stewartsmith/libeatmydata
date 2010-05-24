@@ -20,25 +20,28 @@
 #include <unistd.h>
 #include <assert.h>
 #include <errno.h>
+#include <sys/mman.h>
 
 int main(int argc, char* argv[])
 {
+	(void)argc; (void)argv;
 	int fd;
 	int i;
+	ssize_t ret;
 	fd= open("fsynctestdata",O_CREAT|O_RDWR|O_SYNC|O_DSYNC, 600);
 	assert(fd > 0);
 	assert(errno == 0);
 	for (i = 0; i < 1000; ++i) {
-		write(fd, "a", 1);
-		assert(errno == 0);
+		ret= write(fd, "a", 1);
+		assert(errno == 0 && ret == 1);
 		fsync(fd);
 		assert(errno == 0);
-		write(fd, "a", 1);
-		assert(errno == 0);
+		ret= write(fd, "a", 1);
+		assert(errno == 0 && ret == 1);
 		fdatasync(fd);
 		assert(errno == 0);
-		write(fd, "a", 1);
-		assert(errno == 0);
+		ret= write(fd, "a", 1);
+		assert(errno == 0 && ret == 1);
 		sync();
 		assert(errno == 0);
 	}
