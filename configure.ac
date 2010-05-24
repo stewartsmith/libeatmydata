@@ -4,9 +4,9 @@ AC_INIT([libeatmydata],[1.0], [http://www.flamingspork.com/projects/libeatmydata
 AC_CONFIG_SRCDIR([eatmydata.c])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_HEADERS([config.h])
 
-PANDORA_CANONICAL_TARGET
+PANDORA_CANONICAL_TARGET(less-warnings, warnings-off)
+PANDORA_WARNINGS(NO_WERROR)
 
 AC_CONFIG_FILES(Makefile)
 

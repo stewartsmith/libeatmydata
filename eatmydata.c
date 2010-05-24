@@ -29,6 +29,14 @@
 #include <dlfcn.h>
 #include <stdarg.h>
 
+#if __GNUC__ >= 4
+  #define DLL_PUBLIC __attribute__ ((visibility("default")))
+  #define DLL_LOCAL  __attribute__ ((visibility("hidden")))
+#else
+  #define DLL_PUBLIC
+  #define DLL_LOCAL
+#endif
+
 int errno;
 
 static int (*libc_open)(const char*, int, ...)= NULL;
@@ -42,6 +50,10 @@ static int (*libc_msync)(void*, size_t, int)= NULL;
         if (!libc_##name || dlerror())				\
                 _exit(1);
 
+int DLL_PUBLIC msync(void *addr, size_t length, int flags);
+
+void __attribute__ ((constructor)) eatmydata_init(void);
+
 void __attribute__ ((constructor)) eatmydata_init(void)
 {
 	ASSIGN_DLSYM_OR_DIE(open);
@@ -51,7 +63,7 @@ void __attribute__ ((constructor)) eatmydata_init(void)
 	ASSIGN_DLSYM_OR_DIE(msync);
 }
 
-int eatmydata_is_hungry(void)
+static int eatmydata_is_hungry(void)
 {
 	/* Init here, as it is called before any libc functions */
 	if(!libc_open)
@@ -73,7 +85,7 @@ int eatmydata_is_hungry(void)
 #endif
 }
 
-int fsync(int fd)
+int DLL_PUBLIC fsync(int fd)
 {
 	if (eatmydata_is_hungry()) {
 		errno= 0;
@@ -84,7 +96,7 @@ int fsync(int fd)
 }
 
 /* no errors are defined for this function */
-void sync(void)
+void DLL_PUBLIC sync(void)
 {
 	if (eatmydata_is_hungry())
 		return;
@@ -92,7 +104,7 @@ void sync(void)
 	(*libc_sync)();
 }
 
-int open(const char* pathname, int flags, ...)
+int DLL_PUBLIC open(const char* pathname, int flags, ...)
 {
 	va_list ap;
 	mode_t mode;
@@ -114,7 +126,7 @@ int open(const char* pathname, int flags, ...)
 	return (*libc_open)(pathname,flags,mode);
 }
 
-int fdatasync(int fd)
+int DLL_PUBLIC fdatasync(int fd)
 {
 	if (eatmydata_is_hungry()) {
 		errno= 0;
@@ -124,7 +136,7 @@ int fdatasync(int fd)
 	return (*libc_fdatasync)(fd);
 }
 
-int msync(void *addr, size_t length, int flags)
+int DLL_PUBLIC msync(void *addr, size_t length, int flags)
 {
 	if (eatmydata_is_hungry()) {
 		errno= 0;

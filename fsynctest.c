@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 {
 	int fd;
 	int i;
-	fd= open("fsynctestdata",O_CREAT|O_RDWR|O_SYNC|O_DSYNC);
+	fd= open("fsynctestdata",O_CREAT|O_RDWR|O_SYNC|O_DSYNC, 600);
 	assert(fd > 0);
 	assert(errno == 0);
 	for (i = 0; i < 1000; ++i) {
