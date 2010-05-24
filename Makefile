@@ -3,6 +3,23 @@ all: libs fsynctest
 clean:
 	rm -f libeatmydata.so* fsynctest
 
+dist_files :=\
+	eatmydata.c\
+	fsynctest.c\
+	fsynctest.result\
+	LICENSE\
+	Makefile\
+	Makefile.solaris\
+	README
+
+dist:
+	tarname=libeatmydata-`bzr log -r-1|sed 's/^revno: //p;d'`;\
+	rm -rf $$tarname $$tarname.tar.bz2;\
+	mkdir $$tarname &&\
+	cp $(dist_files) $$tarname &&\
+	tar cjf $$tarname.tar.bz2 $$tarname &&\
+	rm -rf $$tarname
+
 libs: eatmydata.c
 	gcc -shared -Wl,-soname,libeatmydata.so.1  -ldl -o libeatmydata.so.1.0  eatmydata.c -fPIC
 	@rm -f libeatmydata.so.1 libeatmydata.so
