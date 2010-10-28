@@ -1,3 +1,6 @@
+PREFIX=/usr
+LIBS=libeatmydata.so.1 libeatmydata.so.1.0
+
 all: libs fsynctest
 
 clean:
@@ -41,3 +44,7 @@ runfsynctest:
 	@#grep $(testpat) fsynctest.result.run |sed -e 's%[0-9]* vars%%' > fsynctest.result.run.out
 	@#mv fsynctest.result.run.out fsynctest.result.run
 	@#diff fsynctest.result fsynctest.result.run
+
+install:
+>------mkdir -p $(DESTDIR)$(PREFIX)/lib
+>------cp -Rf $(LIBS) $(DESTDIR)$(PREFIX)/lib
