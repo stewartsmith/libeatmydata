@@ -29,6 +29,8 @@
 #include <dlfcn.h>
 #include <stdarg.h>
 
+#include "config.h"
+
 int errno;
 
 static int (*libc_open)(const char*, int, ...)= NULL;

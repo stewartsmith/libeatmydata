@@ -20,6 +20,9 @@ dist:
 	tar cjf $$tarname.tar.bz2 $$tarname &&\
 	rm -rf $$tarname
 
+distclean: clean
+	rm -f config.log config.status config.h
+
 libs: eatmydata.c
 	gcc -shared -Wl,-soname,libeatmydata.so.1  -ldl -o libeatmydata.so.1.0  eatmydata.c -fPIC
 	@rm -f libeatmydata.so.1 libeatmydata.so
