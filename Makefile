@@ -1,5 +1,6 @@
 libs = libeatmydata.so
 CC ?= gcc
+PREFIX ?=/usr
 
 all: $(libs)
 
@@ -54,3 +55,7 @@ runfsynctest: fsynctest $(libs)
 
 runeatmydatatest: eatmydatatest $(libs)
 	LD_PRELOAD=./libeatmydata.so ./eatmydatatest
+
+install:
+	mkdir -p $(DESTDIR)$(PREFIX)/lib
+	cp -Rf $(libs) $(DESTDIR)$(PREFIX)/lib
