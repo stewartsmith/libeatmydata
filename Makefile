@@ -14,7 +14,10 @@ dist_files :=\
 	LICENSE\
 	Makefile\
 	Makefile.solaris\
-	README
+	README\
+	autogen.sh\
+	configure.in\
+	eatmydatatest.c
 
 dist:
 	tarname=libeatmydata-`bzr log -r-1|sed 's/^revno: //p;d'`;\
