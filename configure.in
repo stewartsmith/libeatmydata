@@ -1,4 +1,6 @@
 AC_INIT(libeatmydata, 15+debian, [], [], https://launchpad.net/libeatmydata)
 AC_CONFIG_HEADER(config.h)
 
+AC_CHECK_SIZEOF(mode_t)
+AC_CHECK_SIZEOF(int)
 AC_OUTPUT

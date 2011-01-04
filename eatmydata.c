@@ -100,7 +100,11 @@ int open(const char* pathname, int flags, ...)
 	mode_t mode;
 
 	va_start(ap, flags);
+#if SIZEOF_MODE_T < SIZEOF_INT
+	mode= (mode_t) va_arg(ap, int);
+#else
 	mode= va_arg(ap, mode_t);
+#endif
 	va_end(ap);
 
 	/* In pthread environments the dlsym() may call our open(). */
