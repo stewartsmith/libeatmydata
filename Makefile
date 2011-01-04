@@ -1,7 +1,10 @@
-all: libs fsynctest
+libs = libeatmydata.so
+CC ?= gcc
+
+all: $(libs)
 
 clean:
-	rm -f libeatmydata.so* fsynctest
+	rm -f libeatmydata.so* *.o fsynctest
 
 dist_files :=\
 	eatmydata.c\
@@ -23,19 +26,19 @@ dist:
 distclean: clean
 	rm -f config.log config.status config.h
 
-libs: eatmydata.c
-	gcc -shared -Wl,-soname,libeatmydata.so.1  -ldl -o libeatmydata.so.1.0  eatmydata.c -fPIC
-	@rm -f libeatmydata.so.1 libeatmydata.so
-	ln -s libeatmydata.so.1.0 libeatmydata.so.1
-	ln -s libeatmydata.so.1 libeatmydata.so
+eatmydata.o: eatmydata.c
+	$(CC) -c $(CFLAGS) -fPIC -o $@ $<
+
+libeatmydata.so: eatmydata.o
+	$(CC) -shared -Wl,-soname,$@ $(LDFLAGS) -o $@ $< -ldl
 
 fsynctest: fsynctest.c
-	gcc -o fsynctest fsynctest.c
+	$(CC) $(FFLAGS) $(LDFLAGS) -o fsynctest fsynctest.c
 
 test: runfsynctest
 
 testpat := '^[a-z]*sync\|O_SYNC'
-runfsynctest:
+runfsynctest: fsynctest $(libs)
 	LD_PRELOAD=./libeatmydata.so strace -o fsynctest.result.run ./fsynctest
 	! grep $(testpat) fsynctest.result.run
 	rm fsynctest.result.run
