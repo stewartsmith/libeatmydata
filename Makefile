@@ -4,7 +4,7 @@ CC ?= gcc
 all: $(libs)
 
 clean:
-	rm -f libeatmydata.so* *.o fsynctest
+	rm -f libeatmydata.so* *.o fsynctest eatmydatatest
 
 dist_files :=\
 	eatmydata.c\
@@ -35,7 +35,11 @@ libeatmydata.so: eatmydata.o
 fsynctest: fsynctest.c
 	$(CC) $(FFLAGS) $(LDFLAGS) -o fsynctest fsynctest.c
 
-test: runfsynctest
+eatmydatatest: eatmydatatest.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $@.c
+
+test: runeatmydatatest
+	@echo "Tests succeeded"
 
 testpat := '^[a-z]*sync\|O_SYNC'
 runfsynctest: fsynctest $(libs)
@@ -47,3 +51,6 @@ runfsynctest: fsynctest $(libs)
 	@#grep $(testpat) fsynctest.result.run |sed -e 's%[0-9]* vars%%' > fsynctest.result.run.out
 	@#mv fsynctest.result.run.out fsynctest.result.run
 	@#diff fsynctest.result fsynctest.result.run
+
+runeatmydatatest: eatmydatatest $(libs)
+	LD_PRELOAD=./libeatmydata.so ./eatmydatatest
