@@ -29,8 +29,6 @@
 */
 
 
-int errno;
-
 static int (*libc_open)(const char*, int, ...)= NULL;
 static int (*libc_fsync)(int)= NULL;
 static int (*libc_sync)()= NULL;
