@@ -2,3 +2,11 @@ fsynctest
 libeatmydata.so
 libeatmydata.so.1
 libeatmydata.so.1.0
+.deps
+.libs
+Makefile
+Makefile.in
+config.h
+fsynctest_eatmydata
+config.log
+autom4te.cache

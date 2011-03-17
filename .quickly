@@ -1,0 +1,5 @@
+project = drizzle
+version = 0.4.2
+template = pandora-build
+project-type = application
+pandora-version = 0.129
