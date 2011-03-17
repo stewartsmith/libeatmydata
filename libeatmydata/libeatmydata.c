@@ -31,7 +31,7 @@
 
 static int (*libc_open)(const char*, int, ...)= NULL;
 static int (*libc_fsync)(int)= NULL;
-static int (*libc_sync)()= NULL;
+static int (*libc_sync)(void)= NULL;
 static int (*libc_fdatasync)(int)= NULL;
 static int (*libc_msync)(void*, size_t, int)= NULL;
 
