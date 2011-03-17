@@ -17,7 +17,7 @@
 ### END LICENSE
 
 ACLOCAL_AMFLAGS = -I m4
-LDADD = libeatmydata.la
+#LDADD = libeatmydata.la
 
 
 bin_PROGRAMS =
