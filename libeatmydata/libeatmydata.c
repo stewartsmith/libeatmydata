@@ -28,15 +28,20 @@
 #define CHECK_FILE "/tmp/eatmydata"
 */
 
+typedef int (*libc_open_t)(const char*, int, ...);
+typedef int (*libc_fsync_t)(int);
+typedef int (*libc_sync_t)(void);
+typedef int (*libc_fdatasync_t)(int);
+typedef int (*libc_msync_t)(void*, size_t, int);
 
-static int (*libc_open)(const char*, int, ...)= NULL;
-static int (*libc_fsync)(int)= NULL;
-static int (*libc_sync)(void)= NULL;
-static int (*libc_fdatasync)(int)= NULL;
-static int (*libc_msync)(void*, size_t, int)= NULL;
+static libc_open_t libc_open= NULL;
+static libc_fsync_t libc_fsync= NULL;
+static libc_sync_t libc_sync= NULL;
+static libc_fdatasync_t libc_fdatasync= NULL;
+static libc_msync_t libc_msync= NULL;
 
 #define ASSIGN_DLSYM_OR_DIE(name)			\
-        libc_##name = dlsym(RTLD_NEXT, #name);			\
+        libc_##name = (libc_##name##_##t)(intptr_t)dlsym(RTLD_NEXT, #name);			\
         if (!libc_##name || dlerror())				\
                 _exit(1);
 
