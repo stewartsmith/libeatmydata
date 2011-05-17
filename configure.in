@@ -1,6 +1,0 @@
-AC_INIT(libeatmydata, 25, [], [], https://launchpad.net/libeatmydata)
-AC_CONFIG_HEADER(config.h)
-
-AC_CHECK_SIZEOF(mode_t)
-AC_CHECK_SIZEOF(int)
-AC_OUTPUT
