@@ -1,5 +1,5 @@
-dnl  Copyright (C) 2009 Sun Microsystems
-dnl This file is free software; Sun Microsystems
+dnl  Copyright (C) 2009 Sun Microsystems, Inc.
+dnl This file is free software; Sun Microsystems, Inc.
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
@@ -61,7 +61,7 @@ AC_DEFUN([_PANDORA_REQUIRE_LIBPCRE],[
   _PANDORA_SEARCH_LIBPCRE
 
   AS_IF([test x$ac_cv_libpcre = xno],[
-    AC_MSG_ERROR([libpcre is required for ${PACKAGE}. On Debian this can be found in libpcre3-dev. On RedHat this can be found in pcre-devel.])
+    PANDORA_MSG_ERROR([libpcre is required for ${PACKAGE}. On Debian this can be found in libpcre3-dev. On RedHat this can be found in pcre-devel.])
   ],[
     AC_DEFINE_UNQUOTED(PCRE_HEADER,[${ac_cv_pcre_location}],
                        [Location of pcre header])

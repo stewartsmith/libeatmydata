@@ -68,7 +68,7 @@ AC_DEFUN([PANDORA_HAVE_LIBMYSQLCLIENT],[
 AC_DEFUN([PANDORA_REQUIRE_LIBMYSQLCLIENT],[
   AC_REQUIRE([PANDORA_HAVE_LIBMYSQLCLIENT])
   AS_IF([test "x${ac_cv_libmysqlclient_r}" = "xno"],
-      AC_MSG_ERROR([libmysqlclient_r is required for ${PACKAGE}]))
+      PANDORA_MSG_ERROR([libmysqlclient_r is required for ${PACKAGE}]))
 ])
 
   AS_IF([test "x$MYSQL_CONFIG" = "xISDIR"],[
@@ -102,20 +102,20 @@ AC_DEFUN([PANDORA_REQUIRE_LIBMYSQLCLIENT],[
     MYSQL_INCLUDES="$IBASE $ADDIFLAGS"   
 
     
-    dnl AC_CHECK_LIB([mysqlclient_r],[safe_mutex_init],,[AC_MSG_ERROR([Can't link against libmysqlclient_r])])
+    dnl AC_CHECK_LIB([mysqlclient_r],[safe_mutex_init],,[PANDORA_MSG_ERROR([Can't link against libmysqlclient_r])])
     dnl First test to see if we can run with only ndbclient
     AC_CHECK_LIB([ndbclient],[decimal_bin_size],,[dnl else
       LDFLAGS="$LDFLAGS -lmysys -ldbug"
       AC_CHECK_LIB([mysqlclient_r],[safe_mutex_init],,)
       AC_CHECK_LIB([ndbclient],[ndb_init],,[
-        AC_MSG_ERROR([Can't link against libndbclient])])
+        PANDORA_MSG_ERROR([Can't link against libndbclient])])
       AC_CHECK_LIB([mystrings],[decimal_bin_size],,[
-          AC_MSG_ERROR([Can't find decimal_bin_size])])])
+          PANDORA_MSG_ERROR([Can't find decimal_bin_size])])])
     AC_MSG_CHECKING(for NdbApi headers)
      AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <NdbApi.hpp>]], [[int attr=NdbTransaction::Commit; ]])],[ndbapi_found="yes"],[])
     AS_IF([test "$ndbapi_found" = "yes"], 
        [AC_MSG_RESULT(found)],
-       [AC_MSG_ERROR([Couldn't find NdbApi.hpp!])])
+       [PANDORA_MSG_ERROR([Couldn't find NdbApi.hpp!])])
     AC_MSG_CHECKING(for NDB_LE_ThreadConfigLoop)
       AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <mgmapi.h>]], [[int attr=NDB_LE_ThreadConfigLoop; ]])],[have_cge63="yes"],[])
       AS_IF([test "$have_cge63" = "yes"],

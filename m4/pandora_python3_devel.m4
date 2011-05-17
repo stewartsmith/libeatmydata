@@ -4,12 +4,12 @@ dnl
 dnl pandora-build: A pedantic build system
 dnl
 dnl   Copyright (C) 2009 Sun Microsystems, Inc.
-dnl   Copyright (c) 2008 Sebastian Huber <sebastian-huber@web.de>
-dnl   Copyright (c) 2008 Alan W. Irwin <irwin@beluga.phys.uvic.ca>
-dnl   Copyright (c) 2008 Rafael Laboissiere <rafael@laboissiere.net>
-dnl   Copyright (c) 2008 Andrew Collier <colliera@ukzn.ac.za>
-dnl   Copyright (c) 2008 Matteo Settenvini <matteo@member.fsf.org>
-dnl   Copyright (c) 2008 Horst Knorr <hk_classes@knoda.org>
+dnl   Copyright (C) 2008 Sebastian Huber <sebastian-huber@web.de>
+dnl   Copyright (C) 2008 Alan W. Irwin <irwin@beluga.phys.uvic.ca>
+dnl   Copyright (C) 2008 Rafael Laboissiere <rafael@laboissiere.net>
+dnl   Copyright (C) 2008 Andrew Collier <colliera@ukzn.ac.za>
+dnl   Copyright (C) 2008 Matteo Settenvini <matteo@member.fsf.org>
+dnl   Copyright (C) 2008 Horst Knorr <hk_classes@knoda.org>
 dnl
 dnl   This program is free software: you can redistribute it and/or modify it
 dnl   under the terms of the GNU General Public License as published by the
@@ -76,7 +76,7 @@ AC_DEFUN([PANDORA_PYTHON3_DEVEL],[
   	AC_PATH_PROG([PYTHON3],[python[$PYTHON3_VERSION]])
   ])
 	AS_IF([test -z "$PYTHON3"],[
-	  AC_MSG_ERROR([Cannot find python$PYTHON3_VERSION in your system path])
+	  PANDORA_MSG_ERROR([Cannot find python$PYTHON3_VERSION in your system path])
 	  PYTHON3_VERSION=""
   ])
 
@@ -92,7 +92,7 @@ AC_DEFUN([PANDORA_PYTHON3_DEVEL],[
 	   	   AC_MSG_RESULT([yes])
 		else
 			AC_MSG_RESULT([no])
-			AC_MSG_ERROR([this package requires Python $1.
+			PANDORA_MSG_ERROR([this package requires Python $1.
 If you have it installed, but it isn't the default Python
 interpreter in your system path, please pass the PYTHON3_VERSION
 variable to configure. See ``configure --help'' for reference.
@@ -110,7 +110,7 @@ variable to configure. See ``configure --help'' for reference.
 		AC_MSG_RESULT([yes])
 	else
 		AC_MSG_RESULT([no])
-		AC_MSG_ERROR([cannot import Python3 module "distutils".
+		PANDORA_MSG_ERROR([cannot import Python3 module "distutils".
 Please check your Python3 installation. The error was:
 $ac_python3_distutils_result])
 		PYTHON3_VERSION=""

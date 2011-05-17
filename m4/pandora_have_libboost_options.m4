@@ -42,6 +42,6 @@ AC_DEFUN([PANDORA_REQUIRE_BOOST_PROGRAM_OPTIONS],[
   PANDORA_REQUIRE_BOOST($1)
   _PANDORA_SEARCH_BOOST_PROGRAM_OPTIONS($1)
   AS_IF([test "x${ac_cv_libboost_program_options}" = "xno" -a "x${ac_cv_libboost_program_options_mt}" = "xno"],
-      AC_MSG_ERROR([boost::program_options is required for ${PACKAGE}]))
+      PANDORA_MSG_ERROR([boost::program_options is required for ${PACKAGE}]))
 ])
 

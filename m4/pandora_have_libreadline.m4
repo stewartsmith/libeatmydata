@@ -56,8 +56,8 @@
 #
 # COPYLEFT
 #
-#   Copyright (c) 2009 Monty Taylor
-#   Copyright (c) 2002 Ville Laurikari <vl@iki.fi>
+#   Copyright (C) 2009 Monty Taylor
+#   Copyright (C) 2002 Ville Laurikari <vl@iki.fi>
 #
 #   Copying and distribution of this file, with or without
 #   modification, are permitted in any medium without royalty provided
@@ -231,7 +231,7 @@ AC_DEFUN([_PANDORA_REQUIRE_LIBREADLINE],[
   _PANDORA_SEARCH_LIBREADLINE
 
   AS_IF([test "x$ac_cv_libreadline" = "xno"],
-    AC_MSG_ERROR([libreadline is required for ${PACKAGE}. On Debian this can be found in libreadline5-dev. On RedHat this can be found in readline-devel.]))
+    PANDORA_MSG_ERROR([libreadline is required for ${PACKAGE}. On Debian this can be found in libreadline5-dev. On RedHat this can be found in readline-devel.]))
 
 ])
 

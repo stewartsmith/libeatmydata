@@ -1,0 +1,42 @@
+#  Copyright (C) 2010 Hartmut Holzgraefe
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; version 2 of the License.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+LCOV = lcov
+LCOV_GENHTML = genhtml
+
+lcov: lcov-html
+
+lcov-test: lcov-clean-data test
+
+drizzle_lcov.info: lcov-test
+	@echo "Generating $@"
+	$(LCOV) --directory . --capture --base-directory . --output-file $@
+	$(LCOV) --remove $@ '/usr/include/*' --output-file $@
+	$(LCOV) --remove $@ '/usr/local/include/*' --output-file $@
+	@echo
+
+lcov-html: drizzle_lcov.info
+	@echo "Generating lcov HTML"
+	@$(LCOV_GENHTML) --legend --output-directory lcov_html/ --title "Drizzle Code Coverage" $<
+
+lcov-clean:
+	rm -f drizzle_lcov.info
+	rm -rf lcov_data/
+	rm -rf lcov_html/
+
+lcov-clean-data:
+	@find . -name \*.gcda -o -name \*.da -o -name \*.bbg? | xargs rm -f
+
+

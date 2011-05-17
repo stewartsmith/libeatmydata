@@ -1,5 +1,5 @@
-dnl  Copyright (C) 2009 Sun Microsystems
-dnl This file is free software; Sun Microsystems
+dnl  Copyright (C) 2009 Sun Microsystems, Inc.
+dnl This file is free software; Sun Microsystems, Inc.
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
@@ -46,7 +46,7 @@ AC_DEFUN([_PANDORA_REQUIRE_LIBUUID],[
   ac_enable_libuuid="yes"
   _PANDORA_SEARCH_LIBUUID
   AS_IF([test "x$ac_cv_header_uuid_uuid_h" = "xno"],[
-    AC_MSG_ERROR([Couldn't find uuid/uuid.h. On Debian this can be found in uuid-dev. On Redhat this can be found in e2fsprogs-devel.])
+    PANDORA_MSG_ERROR([Couldn't find uuid/uuid.h. On Debian this can be found in uuid-dev. On RHEL 4 this can be found in e2fsprogs-devel and Fedora/RHEL 6 in libuuid-devel.])
   ])
 ])
 

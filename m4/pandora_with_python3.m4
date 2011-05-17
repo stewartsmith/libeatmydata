@@ -36,7 +36,7 @@ AC_DEFUN([PANDORA_WITH_PYTHON3], [
    ])
   ])
   AS_IF([test "x$with_python3" = "xno" -a "$python3_requested" = "yes"],[
-    AC_MSG_ERROR([Python3 support was explicity requested, but Python3 support
+    PANDORA_MSG_ERROR([Python3 support was explicity requested, but Python3 support
                   was not found. Please correct your build environment and try
                   again])
   ])

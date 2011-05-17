@@ -1,5 +1,5 @@
-dnl  Copyright (C) 2009 Sun Microsystems
-dnl This file is free software; Sun Microsystems
+dnl  Copyright (C) 2009 Sun Microsystems, Inc.
+dnl This file is free software; Sun Microsystems, Inc.
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
@@ -37,5 +37,5 @@ AC_DEFUN([PANDORA_HAVE_LIBGEARMAN],[
 AC_DEFUN([PANDORA_REQUIRE_LIBGEARMAN],[
   AC_REQUIRE([PANDORA_HAVE_LIBGEARMAN])
   AS_IF([test "x${ac_cv_libgearman}" = "xno"],
-      AC_MSG_ERROR([At least version 0.10 of libgearman is required for ${PACKAGE}]))
+      PANDORA_MSG_ERROR([At least version 0.10 of libgearman is required for ${PACKAGE}]))
 ])

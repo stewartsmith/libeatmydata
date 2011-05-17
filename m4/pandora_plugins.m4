@@ -1,5 +1,5 @@
-dnl  Copyright (C) 2009 Sun Microsystems
-dnl This file is free software; Sun Microsystems
+dnl  Copyright (C) 2009 Sun Microsystems, Inc.
+dnl This file is free software; Sun Microsystems, Inc.
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 dnl--------------------------------------------------------------------
@@ -17,7 +17,7 @@ AC_DEFUN([PANDORA_PLUGINS],[
   dnl get called probably during autoconf too, so it's important to protect
   dnl with test -f ... if the files exist, we don't have the chicken/egg 
   dnl problem and therefore don't need to do anything here
-  m4_syscmd([python config/pandora-plugin > /dev/null])
+  m4_syscmd([PYTHON=${PYTHON:-python} && $PYTHON config/pandora-plugin > /dev/null])
   m4_syscmd([test -f config/plugin.stamp || touch config/plugin.stamp aclocal.m4])
 
   m4_sinclude(config/pandora-plugin.ac)
@@ -25,9 +25,14 @@ AC_DEFUN([PANDORA_PLUGINS],[
   dnl Add code here to read set plugin lists and  set drizzled_default_plugin_list
   pandora_builtin_list=`echo $pandora_builtin_list | sed 's/, *$//'`
   pandora_builtin_symbols_list=`echo $pandora_builtin_symbols_list | sed 's/, *$//'`
+  pandora_builtin_load_list=`echo $pandora_builtin_load_list | sed 's/, *$//'`
+  pandora_builtin_load_symbols_list=`echo $pandora_builtin_load_symbols_list | sed 's/, *$//'`
   AS_IF([test "x$pandora_builtin_symbols_list" = "x"], pandora_builtin_symbols_list="NULL")
+  AS_IF([test "x$pandora_builtin_load_symbols_list" = "x"], pandora_builtin_load_symbols_list="NULL")
   AC_SUBST([PANDORA_BUILTIN_LIST],[$pandora_builtin_list])
   AC_SUBST([PANDORA_BUILTIN_SYMBOLS_LIST],[$pandora_builtin_symbols_list])
+  AC_SUBST([PANDORA_BUILTIN_LOAD_LIST],[$pandora_builtin_load_list])
+  AC_SUBST([PANDORA_BUILTIN_LOAD_SYMBOLS_LIST],[$pandora_builtin_load_symbols_list])
   AC_SUBST([PANDORA_PLUGIN_LIST],[$pandora_default_plugin_list])
   m4_ifval(m4_normalize([$1]),[
     AC_CONFIG_FILES($*)

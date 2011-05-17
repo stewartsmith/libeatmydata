@@ -1,5 +1,5 @@
-dnl  Copyright (C) 2009 Sun Microsystems
-dnl This file is free software; Sun Microsystems
+dnl  Copyright (C) 2009 Sun Microsystems, Inc.
+dnl This file is free software; Sun Microsystems, Inc.
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
@@ -42,7 +42,7 @@ AC_DEFUN([_PANDORA_REQUIRE_LIBZ],[
   _PANDORA_SEARCH_LIBZ
 
   AS_IF([test x$ac_cv_libz = xno],[
-    AC_MSG_ERROR([libz is required for ${PACKAGE}. On Debian this can be found in zlib1g-dev. On RedHat this can be found in zlib-devel.])
+    PANDORA_MSG_ERROR([libz is required for ${PACKAGE}. On Debian this can be found in zlib1g-dev. On RedHat this can be found in zlib-devel.])
   ])
 ])
 

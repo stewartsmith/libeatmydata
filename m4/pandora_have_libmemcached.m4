@@ -1,5 +1,5 @@
-dnl  Copyright (C) 2009 Sun Microsystems
-dnl This file is free software; Sun Microsystems
+dnl  Copyright (C) 2009 Sun Microsystems, Inc.
+dnl This file is free software; Sun Microsystems, Inc.
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
@@ -96,11 +96,11 @@ AC_DEFUN([PANDORA_HAVE_LIBMEMCACHED],[
 AC_DEFUN([PANDORA_REQUIRE_LIBMEMCACHED],[
   PANDORA_HAVE_LIBMEMCACHED($1)
   AS_IF([test "x{$pandora_cv_recent_libmemcached}" = "xno"],
-      AC_MSG_ERROR([libmemcached is required for ${PACKAGE}]))
+      PANDORA_MSG_ERROR([libmemcached is required for ${PACKAGE}]))
 ])
 
 AC_DEFUN([PANDORA_REQUIRE_LIBMEMCACHEDPROTOCOL],[
   PANDORA_HAVE_LIBMEMCACHED($1)
   AS_IF([test x$ac_cv_libmemcachedprotocol = xno],
-      AC_MSG_ERROR([libmemcachedprotocol is required for ${PACKAGE}]))
+      PANDORA_MSG_ERROR([libmemcachedprotocol is required for ${PACKAGE}]))
 ])

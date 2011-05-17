@@ -1,11 +1,9 @@
-dnl  Copyright (C) 2009 Sun Microsystems
-dnl This file is free software; Sun Microsystems
+dnl  Copyright (C) 2009 Sun Microsystems, Inc.
+dnl This file is free software; Sun Microsystems, Inc.
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
 AC_DEFUN([PANDORA_HAVE_BETTER_MALLOC],[
-  AC_REQUIRE([AC_FUNC_MALLOC])
-  AC_REQUIRE([AC_FUNC_REALLOC])
   AC_REQUIRE([AC_LIB_PREFIX])
 
   AC_ARG_ENABLE([umem],
