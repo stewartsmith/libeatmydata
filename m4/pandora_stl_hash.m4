@@ -1,3 +1,8 @@
+# Copyright (C) 2008 Sun Microsystems, Inc.
+# This file is free software; Sun Microsystems, Inc.
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
 # We check two things: where the include file is for unordered_map, and
 # what namespace unordered_map lives in within that include file.  We
 # include AC_COMPILE_IFELSE for all the combinations we've seen in the
@@ -83,7 +88,7 @@ AC_DEFUN([PANDORA_HAVE_CXX_UNORDERED],[
 AC_DEFUN([PANDORA_REQUIRE_CXX_UNORDERED],[
   AC_REQUIRE([PANDORA_HAVE_CXX_UNORDERED])
   AS_IF([test "x${pandora_has_unordered}" != "xyes"],[
-    AC_MSG_ERROR([An STL compliant unordered_map is required for ${PACKAGE}.
+    PANDORA_MSG_ERROR([An STL compliant unordered_map is required for ${PACKAGE}.
     Implementations can be found in Recent versions of gcc and in boost])
   ])
 ])

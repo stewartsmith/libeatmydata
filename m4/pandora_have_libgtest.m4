@@ -18,6 +18,8 @@ AC_DEFUN([_PANDORA_SEARCH_LIBGTEST],[
 
   AS_IF([test "x$ac_enable_libgtest" = "xyes"],[
     AC_LANG_PUSH(C++)
+    save_CXXFLAGS="${CXXFLAGS}"
+    CXXFLAGS="${AM_CXXFLAGS} ${CXXFLAGS}"
     AC_LIB_HAVE_LINKFLAGS(gtest,,[
       #include <gtest/gtest.h>
 TEST(pandora_test_libgtest, PandoraTest)
@@ -25,6 +27,7 @@ TEST(pandora_test_libgtest, PandoraTest)
   ASSERT_EQ(1, 1);
 }
     ],[])
+    CXXFLAGS="${save_CXXFLAGS}"
     AC_LANG_POP()
   ],[
     ac_cv_libgtest="no"
@@ -40,5 +43,5 @@ AC_DEFUN([PANDORA_HAVE_LIBGTEST],[
 AC_DEFUN([PANDORA_REQUIRE_LIBGTEST],[
   AC_REQUIRE([_PANDORA_SEARCH_LIBGTEST])
   AS_IF([test "x${ac_cv_libgtest}" = "xno"],
-    AC_MSG_ERROR([libgtest is required for ${PACKAGE}]))
+    PANDORA_MSG_ERROR([libgtest is required for ${PACKAGE}]))
 ])

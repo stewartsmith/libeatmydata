@@ -1,5 +1,5 @@
-dnl  Copyright (C) 2009 Sun Microsystems
-dnl This file is free software; Sun Microsystems
+dnl  Copyright (C) 2009 Sun Microsystems, Inc.
+dnl This file is free software; Sun Microsystems, Inc.
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
@@ -42,5 +42,5 @@ AC_DEFUN([PANDORA_HAVE_LIBPQ],[
 AC_DEFUN([PANDORA_REQUIRE_LIBPQ],[
   AC_REQUIRE([PANDORA_HAVE_LIBPQ])
   AS_IF([test "x${ac_cv_libpq}" = "xno"],
-    AC_MSG_ERROR([libpq is required for ${PACKAGE}]))
+    PANDORA_MSG_ERROR([libpq is required for ${PACKAGE}]))
 ])

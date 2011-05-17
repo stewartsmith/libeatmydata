@@ -21,7 +21,7 @@ AC_DEFUN([PANDORA_WITH_PHP],[
   AS_IF([test "x$with_php" != "xno"],[
     dnl We explicitly requested PHP build. Fail on too-young SWIG.
     AS_IF([test "x$SWIG_CAN_BUILD_PHP" != "xyes"],
-      [AC_MSG_ERROR("Your version of SWIG is too young to build NDB/PHP. >=1.3.33 is required!")])
+      [PANDORA_MSG_ERROR("Your version of SWIG is too young to build NDB/PHP. >=1.3.33 is required!")])
     AS_IF([test "x$with_php" != "xyes"],
       [ac_check_php_config=$with_php],
       [ac_check_php_config="php-config php-config5"])

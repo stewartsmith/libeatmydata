@@ -1,5 +1,5 @@
-project = drizzle
+project = libeatmydata
 version = 0.4.2
 template = pandora-build
-project-type = application
-pandora-version = 0.129
+project-type = library
+pandora-version = 0.176

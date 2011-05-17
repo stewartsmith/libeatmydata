@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-#  Copyright (c) 2006 Jan Kneschke
-#  Copyright (c) 2009 Sun Microsystems
+#  Copyright (C) 2006 Jan Kneschke
+#  Copyright (C) 2009 Sun Microsystems, Inc.
 #  All rights reserved.
 # 
 #  Redistribution and use in source and binary forms, with or without

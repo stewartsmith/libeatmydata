@@ -1,3 +1,8 @@
+# Copyright (C) 2008 Sun Microsystems, Inc.
+# This file is free software; Sun Microsystems, Inc.
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
 # We check two things: where the include file is for cstdint. We
 # include AC_TRY_COMPILE for all the combinations we've seen in the
 # wild.  We define one of HAVE_CSTDINT or HAVE_TR1_CSTDINT or 

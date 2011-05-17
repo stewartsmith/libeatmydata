@@ -23,7 +23,9 @@ AC_DEFUN([_PANDORA_SEARCH_LIBPROTOBUF],[
     [#include <google/protobuf/descriptor.h>],
     [google::protobuf::FileDescriptor* file;],
     [system])
-  CXXFLAGS="${save_CXXFLAGS}"
+  CXXFLAGS="${PTHREAD_CFLAGS} ${save_CXXFLAGS}"
+  LIBPROTOBUF="${LIBPROTOBUF} ${PTHREAD_LIBS}"
+  LTLIBPROTOBUF="${LTLIBPROTOBUF} ${PTHREAD_LIBS}"
   AC_LANG_POP()
 ])
 
@@ -34,7 +36,7 @@ AC_DEFUN([PANDORA_HAVE_LIBPROTOBUF],[
 AC_DEFUN([PANDORA_REQUIRE_LIBPROTOBUF],[
   AC_REQUIRE([PANDORA_HAVE_LIBPROTOBUF])
   AS_IF([test x$ac_cv_libprotobuf = xno],
-      AC_MSG_ERROR([libprotobuf is required for ${PACKAGE}. On Debian this can be found in libprotobuf-dev. On RedHat this can be found in protobuf-devel.]))
+      PANDORA_MSG_ERROR([libprotobuf is required for ${PACKAGE}. On Debian this can be found in libprotobuf-dev. On RedHat this can be found in protobuf-devel.]))
 ])
 
 AC_DEFUN([PANDORA_PROTOBUF_REQUIRE_VERSION],[
@@ -56,7 +58,7 @@ AC_DEFUN([PANDORA_PROTOBUF_REQUIRE_VERSION],[
     [drizzle_cv_protobuf_recent=yes],
     [drizzle_cv_protobuf_recent=no])])
   AS_IF([test "$drizzle_cv_protobuf_recent" = "no"],[
-    AC_MSG_ERROR([Your version of Google Protocol Buffers is too old. ${PACKAGE} requires at least version $p_recent_ver])
+    PANDORA_MSG_ERROR([Your version of Google Protocol Buffers is too old. ${PACKAGE} requires at least version $p_recent_ver])
   ])
   AC_LANG_POP()
 ])
@@ -73,7 +75,7 @@ AC_DEFUN([PANDORA_HAVE_PROTOC],[
 AC_DEFUN([PANDORA_REQUIRE_PROTOC],[
   AC_REQUIRE([PANDORA_HAVE_PROTOC])
   AS_IF([test "x$PROTOC" = "xno"],[
-    AC_MSG_ERROR([Couldn't find the protoc compiler. On Debian this can be found in protobuf-compiler. On RedHat this can be found in protobuf-compiler.])
+    PANDORA_MSG_ERROR([Couldn't find the protoc compiler. On Debian this can be found in protobuf-compiler. On RedHat this can be found in protobuf-compiler.])
   ])
 ])
 

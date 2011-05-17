@@ -23,9 +23,18 @@ AC_DEFUN([PANDORA_PLATFORM],[
 
 
   case "$host_os" in
-    *solaris*|*freebsd*)
+    *solaris*)
     AS_IF([test "x${ac_cv_env_CPPFLAGS_set}" = "x"],[
       CPPFLAGS="${CPPFLAGS} -I/usr/local/include"
+    ])
+
+    AS_IF([test "x${ac_cv_env_LDFLAGS_set}" = "x"],[
+      LDFLAGS="${LDFLAGS} -L/usr/local/lib"
+    ])
+    ;;
+    *freebsd*)
+    AS_IF([test "x${ac_cv_env_CPPFLAGS_set}" = "x"],[
+      CPPFLAGS="${CPPFLAGS} -isystem /usr/local/include"
     ])
 
     AS_IF([test "x${ac_cv_env_LDFLAGS_set}" = "x"],[
@@ -50,6 +59,7 @@ AC_DEFUN([PANDORA_PLATFORM],[
     *solaris*)
       TARGET_SOLARIS="true"
       PANDORA_OPTIMIZE_BITFIELD=0
+      AS_IF([test "x${USE_NLS}" = "xyes"],[LIBS="${LIBS} -lintl"])
       AC_SUBST(TARGET_SOLARIS)
       AC_DEFINE([TARGET_OS_SOLARIS], [1], [Whether we are building for Solaris])
       ;;
@@ -59,9 +69,26 @@ AC_DEFUN([PANDORA_PLATFORM],[
       AC_DEFINE([TARGET_OS_FREEBSD], [1], [Whether we are building for FreeBSD])
       AC_DEFINE([__APPLE_CC__],[1],[Workaround for bug in FreeBSD headers])
       ;;
-    *)
+    *mingw32*)
+      TARGET_WINDOWS="true"
+      AC_SUBST(TARGET_WINDOWS)
+      AC_DEFINE([TARGET_OS_WINDOWS], [1], [Whether we are building for Windows])
+      AC_DEFINE([WINVER], [WindowsXP], [Version of Windows])
+      AC_DEFINE([_WIN32_WINNT], [0x0501], [Magical number to make things work])
+      AC_DEFINE([EAI_SYSTEM], [11], [Another magical number])
+      AH_BOTTOM([
+#ifndef HAVE_SYS_SOCKET_H
+# define SHUT_RD SD_RECEIVE
+# define SHUT_WR SD_SEND
+# define SHUT_RDWR SD_BOTH
+#endif
+      ])
+
+      LIBS="$LIBS -lwsock32 -lws2_32"
+      AM_CFLAGS="${AM_CFLAGS} -I\${top_srcdir}/win32/mingw -I\${top_builddir}/win32/mingw -I\${top_srcdir}/win32 -I\${top_builddir}/win32"
       ;;
   esac
+  AM_CONDITIONAL(BUILD_WIN32, [test "x${TARGET_WINDOWS}" = "xtrue"])
 
   AC_SUBST(PANDORA_OPTIMIZE_BITFIELD)
 

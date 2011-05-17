@@ -29,7 +29,7 @@ AC_DEFUN([PANDORA_WITH_PYTHON], [
     AS_IF([test "x$pythonexists" = "xno"],[with_python="no"])
   ])
   AS_IF([test "x$with_python" = "xno" -a "$python_requested" = "yes"],[
-    AC_MSG_ERROR([Python support was explicity requested, but Python support
+    PANDORA_MSG_ERROR([Python support was explicity requested, but Python support
                   was not found. Please correct your build environment and try
                   again])
   ])
