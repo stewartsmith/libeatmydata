@@ -56,8 +56,8 @@
 #
 # COPYLEFT
 #
-#   Copyright (c) 2009 Monty Taylor
-#   Copyright (c) 2002 Ville Laurikari <vl@iki.fi>
+#   Copyright (C) 2009 Monty Taylor
+#   Copyright (C) 2002 Ville Laurikari <vl@iki.fi>
 #
 #   Copying and distribution of this file, with or without
 #   modification, are permitted in any medium without royalty provided

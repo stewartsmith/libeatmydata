@@ -4,12 +4,12 @@ dnl
 dnl pandora-build: A pedantic build system
 dnl
 dnl   Copyright (C) 2009 Sun Microsystems, Inc.
-dnl   Copyright (c) 2008 Sebastian Huber <sebastian-huber@web.de>
-dnl   Copyright (c) 2008 Alan W. Irwin <irwin@beluga.phys.uvic.ca>
-dnl   Copyright (c) 2008 Rafael Laboissiere <rafael@laboissiere.net>
-dnl   Copyright (c) 2008 Andrew Collier <colliera@ukzn.ac.za>
-dnl   Copyright (c) 2008 Matteo Settenvini <matteo@member.fsf.org>
-dnl   Copyright (c) 2008 Horst Knorr <hk_classes@knoda.org>
+dnl   Copyright (C) 2008 Sebastian Huber <sebastian-huber@web.de>
+dnl   Copyright (C) 2008 Alan W. Irwin <irwin@beluga.phys.uvic.ca>
+dnl   Copyright (C) 2008 Rafael Laboissiere <rafael@laboissiere.net>
+dnl   Copyright (C) 2008 Andrew Collier <colliera@ukzn.ac.za>
+dnl   Copyright (C) 2008 Matteo Settenvini <matteo@member.fsf.org>
+dnl   Copyright (C) 2008 Horst Knorr <hk_classes@knoda.org>
 dnl
 dnl   This program is free software: you can redistribute it and/or modify it
 dnl   under the terms of the GNU General Public License as published by the

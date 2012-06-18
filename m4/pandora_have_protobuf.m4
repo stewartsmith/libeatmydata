@@ -23,7 +23,9 @@ AC_DEFUN([_PANDORA_SEARCH_LIBPROTOBUF],[
     [#include <google/protobuf/descriptor.h>],
     [google::protobuf::FileDescriptor* file;],
     [system])
-  CXXFLAGS="${save_CXXFLAGS}"
+  CXXFLAGS="${PTHREAD_CFLAGS} ${save_CXXFLAGS}"
+  LIBPROTOBUF="${LIBPROTOBUF} ${PTHREAD_LIBS}"
+  LTLIBPROTOBUF="${LTLIBPROTOBUF} ${PTHREAD_LIBS}"
   AC_LANG_POP()
 ])
 

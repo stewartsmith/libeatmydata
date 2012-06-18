@@ -19,11 +19,10 @@ AC_DEFUN([_PANDORA_SEARCH_BOOST],[
   AS_IF([test "x$ac_enable_boost" = "xyes"],[
     dnl link against libc because we're just looking for headers here
     AC_LANG_PUSH(C++)
-    AC_LIB_HAVE_LINKFLAGS(c,,[
-      #include <boost/pool/pool.hpp>
-    ],[
-      boost::pool<> test_pool(1);
-    ])
+    AC_LIB_HAVE_LINKFLAGS(c,,
+      [#include <boost/pool/pool.hpp>],
+      [boost::pool<> test_pool(1);],
+      [system])
     AC_LANG_POP()
   ],[
     ac_cv_boost="no"
@@ -55,7 +54,28 @@ AC_DEFUN([_PANDORA_SEARCH_BOOST],[
       ac_cv_boost=no
     ])
   ])
-      
+
+  AS_IF([test "x${ac_gcc_profile_mode}" = "xyes"],[
+    AC_CACHE_CHECK([if boost is recent enough for GCC Profile Mode],
+      [pandora_cv_boost_profile],[
+      pandora_need_boost_version=104300
+      AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+#include <boost/version.hpp>
+
+#if BOOST_VERSION < ${pandora_need_boost_version}
+# error boost too old!
+#endif
+          ]],[[]])
+        ],[
+        pandora_cv_boost_profile=yes
+        ],[
+        pandora_cv_boost_profile=no
+        ])
+    ])
+    AS_IF([test "x${pandora_cv_boost_profile}" = "xyes"],[
+      AC_DEFINE([BOOST_DETAIL_NO_CONTAINER_FWD],[1],[Disable forward decl of stl in boost])
+    ])
+  ])
 
   AM_CONDITIONAL(HAVE_BOOST, [test "x${ac_cv_boost}" = "xyes"])
   

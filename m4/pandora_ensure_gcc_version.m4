@@ -1,5 +1,5 @@
-dnl  Copyright (C) 2009 Sun Microsystems
-dnl This file is free software; Sun Microsystems
+dnl  Copyright (C) 2009 Sun Microsystems, Inc.
+dnl This file is free software; Sun Microsystems, Inc.
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
@@ -9,9 +9,12 @@ AC_DEFUN([_PANDORA_TRY_GCC],[
                                 [ABCDEFGHIJKLMNOPQRSTUVWXYZ___])])
   AC_CHECK_PROGS([CC]NAME,[gcc$1])
   AC_CHECK_PROGS([CXX]NAME,[g++$1])
-  AS_IF([test "x${CC]NAME[}" != "x"],[CC="${CC]NAME[}"])
-  AS_IF([test "x${CXX]NAME[}" != "x"],[CXX="${CXX]NAME[}"])
-  AS_IF([test "x${CC]NAME[}" != "x"],[CPP="${CC]NAME[} -E"])
+  AS_IF([test "x${CC]NAME[}" != "x" -a "x${ac_cv_env_CC_set}" = "x"],
+    [CC="${CC]NAME[}"])
+  AS_IF([test "x${CXX]NAME[}" != "x" -a "x${ac_cv_env_CCX_set}" = "x"],
+    [CXX="${CXX]NAME[}"])
+  AS_IF([test "x${CC]NAME[}" != "x" -a "x${ac_cv_env_CPP_set}" = "x"],
+    [CPP="${CC]NAME[} -E"])
 ])
 
 dnl If the user is on a Mac and didn't ask for a specific compiler
