@@ -72,7 +72,8 @@ libeatmydata_la_LIBADD = $(LIBDL_LIBS)
 libeatmydata_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(LIBEATMYDATA_VERSION)
 
 check_PROGRAMS += \
-  libeatmydata/test/fsynctest
+  libeatmydata/test/fsynctest \
+  libeatmydata/test/eatmydatatest
 
 #
 # Simple libeatmydata application
