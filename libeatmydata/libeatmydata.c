@@ -33,17 +33,24 @@ typedef int (*libc_fsync_t)(int);
 typedef int (*libc_sync_t)(void);
 typedef int (*libc_fdatasync_t)(int);
 typedef int (*libc_msync_t)(void*, size_t, int);
+typedef int (*libc_sync_file_range_t)(int, off64_t, off64_t, unsigned int);
 
 static libc_open_t libc_open= NULL;
 static libc_fsync_t libc_fsync= NULL;
 static libc_sync_t libc_sync= NULL;
 static libc_fdatasync_t libc_fdatasync= NULL;
 static libc_msync_t libc_msync= NULL;
+static libc_sync_file_range_t libc_sync_file_range= NULL;
 
 #define ASSIGN_DLSYM_OR_DIE(name)			\
         libc_##name = (libc_##name##_##t)(intptr_t)dlsym(RTLD_NEXT, #name);			\
         if (!libc_##name || dlerror())				\
                 _exit(1);
+
+#define ASSIGN_DLSYM_IF_EXIST(name)			\
+        libc_##name = (libc_##name##_##t)(intptr_t)dlsym(RTLD_NEXT, #name);			\
+						   dlerror();
+
 
 int LIBEATMYDATA_API msync(void *addr, size_t length, int flags);
 
@@ -56,6 +63,7 @@ void __attribute__ ((constructor)) eatmydata_init(void)
 	ASSIGN_DLSYM_OR_DIE(sync);
 	ASSIGN_DLSYM_OR_DIE(fdatasync);
 	ASSIGN_DLSYM_OR_DIE(msync);
+	ASSIGN_DLSYM_IF_EXIST(sync_file_range);
 }
 
 static int eatmydata_is_hungry(void)
@@ -139,4 +147,14 @@ int LIBEATMYDATA_API msync(void *addr, size_t length, int flags)
 	}
 
 	return (*libc_msync)(addr, length, flags);
+}
+
+int sync_file_range(int fd, off64_t offset, off64_t nbytes, unsigned int flags)
+{
+	if (eatmydata_is_hungry()) {
+		errno= 0;
+		return 0;
+	}
+
+	return (libc_sync_file_range)(fd, offset, nbytes, flags);
 }
