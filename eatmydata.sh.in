@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-libeatmydata="@libdir@/libeatmydata.so"
+libeatmydata="@libdir@/libeatmydata"
 name="eatmydata"
 
 eatmydata_error()
@@ -51,11 +51,17 @@ eatmydata_exec()
     fi
 
     # Preload libeatmydata
-    if [ -n "$LD_PRELOAD" ]; then
-        export LD_PRELOAD="$libeatmydata $LD_PRELOAD"
+    if [ `uname` == "Darwin" ]; then
+	export DYLD_FORCE_FLAT_NAMESPACE=1
+	export DYLD_INSERT_LIBRARIES="$libeatmydata.dylib"
     else
-        export LD_PRELOAD="$libeatmydata"
+        if [ -n "$LD_PRELOAD" ]; then
+            export LD_PRELOAD="$libeatmydata.so $LD_PRELOAD"
+        else
+            export LD_PRELOAD="$libeatmydata.so"
+        fi
     fi
+
     # Execute requested command
     shift
     exec "$cmd" "$@"
