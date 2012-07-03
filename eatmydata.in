@@ -1,0 +1,49 @@
+#!/bin/sh
+
+# Copyright ©: 2010, Modestas Vainius <modax@debian.org>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+shlib="@libexecdir@/eatmydata.sh"
+if [ -f "$shlib" ]; then
+    . "$shlib"
+else
+    echo "Unable to locate eatmydata shell library, it was not enabled" >&2
+    exec "$@"
+fi
+
+usage()
+{
+    echo "usage: $0 [--] command [ command arguments ... ]" >&2
+    exit 2
+}
+
+# Detect operation mode. If this script is run via symlink, look for basename
+# in the PATH and execute it.
+if [ -L "$0" ]; then
+    # Symlink mode. Get command to execute from the basename of $0.
+    cmd="`basename "$0"`"
+    set -- "$cmd" "$@"
+else
+    # Normal mode
+    if [ "$1" = "--" ]; then
+        shift
+    fi
+
+    if [ "$#" -eq 0 ]; then
+        usage
+    fi
+fi
+
+eatmydata_exec "$@"

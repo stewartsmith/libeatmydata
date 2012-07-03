@@ -27,12 +27,28 @@ lib_LTLIBRARIES =
 noinst_LTLIBRARIES =
 nobase_include_HEADERS =
 noinst_HEADERS =
-CLEANFILES =
+CLEANFILES = $(bin_SCRIPTS) $(libexec_SCRIPTS)
 EXTRA_DIST = \
   fsynctest.result \
   docs/Doxyfile \
   docs/header.html.in \
-  test_run.sh
+  test_run.sh \
+  eatmydata.in \
+  eatmydata.sh.in
+
+bin_SCRIPTS = eatmydata
+libexec_SCRIPTS = eatmydata.sh
+
+do_subst = @SED@ \
+	-e 's!@''libdir''@!$(libdir)!g' \
+	-e 's!@''libexecdir''@!$(libexecdir)!g'
+
+eatmydata: eatmydata.in Makefile
+	$(do_subst) $(srcdir)/eatmydata.in > $@
+	chmod +x eatmydata
+
+eatmydata.sh: eatmydata.sh.in Makefile
+	$(do_subst) $(srcdir)/eatmydata.sh.in > $@
 
 #
 # libeatmydata
