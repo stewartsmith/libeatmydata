@@ -46,8 +46,6 @@ AC_SUBST(LIBEATMYDATA_VERSION)
 
 PANDORA_REQUIRE_LIBDL
 
-PANDORA_PLUGINS
-
 AC_DEFINE_UNQUOTED([LIBEATMYDATA_MODULE_EXT], ["$acl_cv_shlibext"],
                    [Extension to use for modules.])
 

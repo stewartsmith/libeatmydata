@@ -27,14 +27,12 @@ lib_LTLIBRARIES =
 noinst_LTLIBRARIES =
 nobase_include_HEADERS =
 noinst_HEADERS =
-pkgplugin_LTLIBRARIES =
 CLEANFILES =
 EXTRA_DIST = \
   fsynctest.result \
   docs/Doxyfile \
   docs/header.html.in \
   test_run.sh
-
 
 #
 # libeatmydata
@@ -62,8 +60,6 @@ check_PROGRAMS += \
 #
 # Simple libeatmydata application
 #
-
-include config/pandora-plugin.am
 
 TESTS = $(check_PROGRAMS)
 
