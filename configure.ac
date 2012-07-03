@@ -9,7 +9,7 @@
 #
 
 
-AC_INIT([libeatmydata],[1.0], [http://www.flamingspork.com/projects/libeatmydata])
+AC_INIT([libeatmydata],[1.1], [http://www.flamingspork.com/projects/libeatmydata])
 AC_CONFIG_SRCDIR([libeatmydata/libeatmydata.c])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([m4])
@@ -17,14 +17,14 @@ AC_CONFIG_MACRO_DIR([m4])
 PANDORA_CANONICAL_TARGET(less-warnings)
 
 # Increment if interfaces have been added, removed, or changed.
-LIBEATMYDATA_VERSION_CURRENT=1
+LIBEATMYDATA_VERSION_CURRENT=2
 
 # Increment if source code has changed, set to zero if current is incremented.
 LIBEATMYDATA_VERSION_REVISION=0
 
 # Increment if interfaces have been added, set to zero if interfaces have been
 # removed or changed.
-LIBEATMYDATA_VERSION_AGE=0
+LIBEATMYDATA_VERSION_AGE=1
 
 AC_SUBST(LIBEATMYDATA_VERSION_CURRENT)
 AC_SUBST(LIBEATMYDATA_VERSION_REVISION)
@@ -67,13 +67,7 @@ echo "   * Debug enabled:             $with_debug"
 echo "   * Profiling enabled:         $ac_profiling"
 echo "   * Coverage enabled:          $ac_coverage"
 echo "   * Warnings as errors:        $ac_cv_warnings_as_errors"
-echo "   * Configured modules:"
 echo ""
-
-for module in `echo $PANDORA_PLUGIN_LIST | sed 's/_/::/g' | tr ',' '\n' | sort`
-do
-  echo "     - $module"
-done
 
 echo ""
 echo "---"
