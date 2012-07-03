@@ -28,6 +28,7 @@ noinst_LTLIBRARIES =
 nobase_include_HEADERS =
 noinst_HEADERS =
 CLEANFILES = $(bin_SCRIPTS) $(libexec_SCRIPTS)
+DISTCLEANFILES = config/top.h
 EXTRA_DIST = \
   fsynctest.result \
   docs/Doxyfile \
