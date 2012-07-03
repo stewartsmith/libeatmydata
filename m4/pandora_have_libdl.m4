@@ -42,7 +42,7 @@ AC_DEFUN([_PANDORA_REQUIRE_LIBDL],[
   _PANDORA_SEARCH_LIBDL
 
   AS_IF([test "$ac_cv_func_dlopen" != "yes"],[
-    AC_MSG_ERROR([libdl/dlopen() is required for ${PACKAGE}. On Debian this can be found in libc6-dev. On RedHat this can be found in glibc-devel.])
+    PANDORA_MSG_ERROR([libdl/dlopen() is required for ${PACKAGE}. On Debian this can be found in libc6-dev. On RedHat this can be found in glibc-devel.])
   ])
 ])
 

@@ -20,9 +20,9 @@ AC_DEFUN([PANDORA_64BIT],[
         [isainfo_b=`${ISAINFO} -b`],
         [isainfo_b="x"])
 
-  AS_IF([test "$isainfo_b" != "x"],[
+  AS_IF([test "$isainfo_b" != "x" -a "$isainfo_b" != "32"],[
 
-    isainfo_k=`${ISAINFO} -k` 
+    isainfo_k=`${ISAINFO} -k`
     DTRACEFLAGS="${DTRACEFLAGS} -${isainfo_b}"
 
     AS_IF([test "x$ac_enable_64bit" = "xyes"],[
@@ -32,7 +32,7 @@ AC_DEFUN([PANDORA_64BIT],[
       ])
 
       AS_IF([test "x$libdir" = "x\${exec_prefix}/lib"],[
-       dnl The user hasn't overridden the default libdir, so we'll 
+       dnl The user hasn't overridden the default libdir, so we'll
        dnl the dir suffix to match solaris 32/64-bit policy
        libdir="${libdir}/${isainfo_k}"
       ])

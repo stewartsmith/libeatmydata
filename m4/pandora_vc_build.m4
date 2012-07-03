@@ -60,9 +60,18 @@ AC_DEFUN([PANDORA_BUILDING_FROM_VC],[
         PANDORA_VC_REVNO="${PANDORA_BZR_REVNO}"
         PANDORA_VC_REVID=`bzr log -r-1 --show-ids | grep revision-id | cut -f2 -d' ' | head -1`
         PANDORA_VC_BRANCH=`bzr nick`
+        PANDORA_VC_TAG=`bzr tags -r-1 | cut -f1 -d' ' | head -1`
+        PANDORA_VC_LATEST_TAG=`bzr tags --sort=time | grep -v '\?'| cut -f1 -d' '  | tail -1`
         if test "x${vc_changelog}" = "xyes"; then
           bzr log --gnu > ChangeLog
         fi
+      fi
+    elif test "${pandora_building_from_git}" = "yes"; then
+      echo "# Grabbing changelog and version information from git"
+      PANDORA_GIT_REVID=`git --no-pager log --max-count=1 | cut -f2 -d' ' | head -1`
+      if test "x$PANDORA_GIT_REVID" != "x${PANDORA_VC_REVNO}" ; then
+         PANDORA_VC_REVID="${PANDORA_GIT_REVID}"
+         PANDORA_VC_BRANCH=`git branch | grep -Ei "\* (.*)" | cut -f2 -d' '`
       fi
     fi
 
@@ -75,6 +84,8 @@ AC_DEFUN([PANDORA_BUILDING_FROM_VC],[
 PANDORA_VC_REVNO=${PANDORA_VC_REVNO}
 PANDORA_VC_REVID=${PANDORA_VC_REVID}
 PANDORA_VC_BRANCH=${PANDORA_VC_BRANCH}
+PANDORA_VC_TAG=${PANDORA_VC_TAG}
+PANDORA_VC_LATEST_TAG=${PANDORA_VC_LATEST_TAG}
 PANDORA_RELEASE_DATE=${PANDORA_RELEASE_DATE}
 PANDORA_RELEASE_NODOTS_DATE=${PANDORA_RELEASE_NODOTS_DATE}
 EOF
@@ -100,6 +111,10 @@ AC_DEFUN([PANDORA_VC_VERSION],[
     _PANDORA_READ_FROM_FILE([PANDORA_VC_REVID],${srcdir}/config/pandora_vc_revinfo)
     _PANDORA_READ_FROM_FILE([PANDORA_VC_BRANCH],
                             ${srcdir}/config/pandora_vc_revinfo)
+    _PANDORA_READ_FROM_FILE([PANDORA_VC_TAG],
+                            ${srcdir}/config/pandora_vc_revinfo)
+    _PANDORA_READ_FROM_FILE([PANDORA_VC_LATEST_TAG],
+                            ${srcdir}/config/pandora_vc_revinfo)
     _PANDORA_READ_FROM_FILE([PANDORA_RELEASE_DATE],
                             ${srcdir}/config/pandora_vc_revinfo)
     _PANDORA_READ_FROM_FILE([PANDORA_RELEASE_NODOTS_DATE],
@@ -111,8 +126,25 @@ AC_DEFUN([PANDORA_VC_VERSION],[
     PANDORA_RELEASE_COMMENT="trunk"
   ])
     
-  PANDORA_RELEASE_VERSION="${PANDORA_RELEASE_DATE}.${PANDORA_VC_REVNO}"
-  PANDORA_RELEASE_ID="${PANDORA_RELEASE_NODOTS_DATE}${PANDORA_VC_REVNO}"
+  AS_IF([test "x${PANDORA_VC_TAG}" != "x"],[
+    PANDORA_RELEASE_VERSION="${PANDORA_VC_TAG}"
+    changequote(<<, >>)dnl
+    PANDORA_RELEASE_ID=`echo ${PANDORA_RELEASE_VERSION} | sed 's/[^0-9]//g'`
+    changequote([, ])dnl
+  ],[
+    AS_IF([test "x${PANDORA_VC_LATEST_TAG}" != "x"],[
+      PANDORA_RELEASE_VERSION="${PANDORA_VC_LATEST_TAG}.${PANDORA_VC_REVNO}"
+      changequote(<<, >>)dnl
+      PANDORA_RELEASE_ID=`echo ${PANDORA_VC_LATEST_TAG} | sed 's/[^0-9]//g'`
+      changequote([, ])dnl
+    ],[
+      PANDORA_RELEASE_VERSION="${PANDORA_RELEASE_DATE}.${PANDORA_VC_REVNO}"
+      changequote(<<, >>)dnl
+      PANDORA_RELEASE_ID=`echo ${PANDORA_RELEASE_DATE} | sed 's/[^0-9]//g'`
+      changequote([, ])dnl
+    ])
+  ])
+
 
   VERSION="${PANDORA_RELEASE_VERSION}"
   AC_DEFINE_UNQUOTED([PANDORA_RELEASE_VERSION],["${PANDORA_RELEASE_VERSION}"],

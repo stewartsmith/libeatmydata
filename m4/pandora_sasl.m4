@@ -55,7 +55,7 @@ AC_DEFUN([PANDORA_HAVE_SASL],[
 AC_DEFUN([PANDORA_REQUIRE_SASL],[
   AC_REQUIRE([_PANDORA_SEARCH_SASL])
   AS_IF([test "x${ac_cv_sasl}" = "xno"],
-    AC_MSG_ERROR([SASL (libsasl or libsasl2) is required for ${PACKAGE}]))
+    PANDORA_MSG_ERROR([SASL (libsasl or libsasl2) is required for ${PACKAGE}]))
 ])
 
 AC_DEFUN([_PANDORA_SEARCH_LIBSASL],[
@@ -92,7 +92,7 @@ AC_DEFUN([PANDORA_HAVE_LIBSASL],[
 AC_DEFUN([PANDORA_REQUIRE_LIBSASL],[
   AC_REQUIRE([_PANDORA_SEARCH_LIBSASL])
   AS_IF([test "x${ac_cv_libsasl}" = "xno"],
-    AC_MSG_ERROR([libsasl is required for ${PACKAGE}]))
+    PANDORA_MSG_ERROR([libsasl is required for ${PACKAGE}]))
 ])
 
 AC_DEFUN([_PANDORA_SEARCH_LIBSASL2],[
@@ -129,5 +129,5 @@ AC_DEFUN([PANDORA_HAVE_LIBSASL2],[
 AC_DEFUN([PANDORA_REQUIRE_LIBSASL2],[
   AC_REQUIRE([_PANDORA_SEARCH_LIBSASL2])
   AS_IF([test "x${ac_cv_libsasl2}" = "xno"],
-    AC_MSG_ERROR([libsasl2 is required for ${PACKAGE}]))
+    PANDORA_MSG_ERROR([libsasl2 is required for ${PACKAGE}]))
 ])

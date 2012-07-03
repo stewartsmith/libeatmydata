@@ -55,8 +55,8 @@ AC_DEFUN([PANDORA_ENSURE_GCC_VERSION],[
         [ac_cv_gcc_recent=yes],
         [ac_cv_gcc_recent=no])])
     AS_IF([test "$ac_cv_gcc_recent" = "no" -a "$host_vendor" = "apple"],
-      AC_MSG_ERROR([Your version of GCC is too old. At least version 4.2 is required on OSX. You may need to install a version of XCode >= 3.1.2]))
+      PANDORA_MSG_ERROR([Your version of GCC is too old. At least version 4.2 is required on OSX. You may need to install a version of XCode >= 3.1.2]))
     AS_IF([test "$ac_cv_gcc_recent" = "no"],
-      AC_MSG_ERROR([Your version of GCC is too old. At least version 4.2 is required. On RHEL/CentOS systems this is found in the gcc44 and gcc44-c++ packages.]))
+      PANDORA_MSG_ERROR([Your version of GCC is too old. At least version 4.2 is required. On RHEL/CentOS systems this is found in the gcc44 and gcc44-c++ packages.]))
   ])
 ])

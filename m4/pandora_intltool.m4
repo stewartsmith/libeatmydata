@@ -30,7 +30,7 @@ AC_REQUIRE([AM_NLS])dnl
 
 case "$am__api_version" in
     1.[01234])
-	AC_MSG_ERROR([Automake 1.5 or newer is required to use intltool])
+	PANDORA_MSG_ERROR([Automake 1.5 or newer is required to use intltool])
     ;;
     *)
     ;;
