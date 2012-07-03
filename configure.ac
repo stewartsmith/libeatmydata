@@ -46,9 +46,6 @@ AC_SUBST(LIBEATMYDATA_VERSION)
 
 PANDORA_REQUIRE_LIBDL
 
-AC_DEFINE_UNQUOTED([LIBEATMYDATA_MODULE_EXT], ["$acl_cv_shlibext"],
-                   [Extension to use for modules.])
-
 AC_CONFIG_FILES(Makefile docs/header.html)
 
 AC_OUTPUT
@@ -66,6 +63,3 @@ echo "   * Profiling enabled:         $ac_profiling"
 echo "   * Coverage enabled:          $ac_coverage"
 echo "   * Warnings as errors:        $ac_cv_warnings_as_errors"
 echo ""
-
-echo ""
-echo "---"
