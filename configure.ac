@@ -9,7 +9,7 @@
 #
 
 
-AC_INIT([libeatmydata],[56], [http://www.flamingspork.com/projects/libeatmydata])
+AC_INIT([libeatmydata],[59], [http://www.flamingspork.com/projects/libeatmydata])
 AC_CONFIG_SRCDIR([libeatmydata/libeatmydata.c])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([m4])
