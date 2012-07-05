@@ -16,6 +16,12 @@
 libeatmydata="@libdir@/libeatmydata"
 name="eatmydata"
 
+if [ "x`uname`" = "xDarwin" ]; then
+	libeatmydata="$libeatmydata.dylib"
+else
+	libeatmydata="$libeatmydata.so"
+fi
+
 eatmydata_error()
 {
     echo "$name error: $1" >&2
@@ -51,14 +57,14 @@ eatmydata_exec()
     fi
 
     # Preload libeatmydata
-    if [ `uname` == "Darwin" ]; then
+    if [ `uname` = "Darwin" ]; then
 	export DYLD_FORCE_FLAT_NAMESPACE=1
-	export DYLD_INSERT_LIBRARIES="$libeatmydata.dylib"
+	export DYLD_INSERT_LIBRARIES="$libeatmydata"
     else
         if [ -n "$LD_PRELOAD" ]; then
-            export LD_PRELOAD="$libeatmydata.so $LD_PRELOAD"
+            export LD_PRELOAD="$libeatmydata $LD_PRELOAD"
         else
-            export LD_PRELOAD="$libeatmydata.so"
+            export LD_PRELOAD="$libeatmydata"
         fi
     fi
 
