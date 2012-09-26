@@ -48,6 +48,9 @@ PANDORA_REQUIRE_LIBDL
 AC_CHECK_SIZEOF(mode_t)
 AC_CHECK_SIZEOF(int)
 
+AC_CHECK_DECLS(sync_file_range)
+AC_CHECK_FUNCS(sync_file_range)
+
 AC_CONFIG_FILES(Makefile docs/header.html)
 
 AC_OUTPUT
