@@ -48,6 +48,8 @@ PANDORA_REQUIRE_LIBDL
 AC_CHECK_SIZEOF(mode_t)
 AC_CHECK_SIZEOF(int)
 
+AC_CHECK_DECLS(fdatasync)
+AC_CHECK_FUNCS(fdatasync)
 AC_CHECK_DECLS(sync_file_range)
 AC_CHECK_FUNCS(sync_file_range)
 

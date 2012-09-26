@@ -28,6 +28,13 @@
 #define CHECK_FILE "/tmp/eatmydata"
 */
 
+/*
+ * Mac OS X 10.7 doesn't declare fdatasync().
+ */
+#if defined HAVE_DECL_FDATASYNC && !HAVE_DECL_FDATASYNC
+int fdatasync(int fd);
+#endif
+
 typedef int (*libc_open_t)(const char*, int, ...);
 typedef int (*libc_fsync_t)(int);
 typedef int (*libc_sync_t)(void);
