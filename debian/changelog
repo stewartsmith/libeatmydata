@@ -1,0 +1,5 @@
+libeatmydata (0.1-1) unstable; urgency=low
+
+  * Initial release (Closes: #JEN-16)  
+
+ -- Alexey Bychko <alexey.bychko@percona.com>  Mon, 13 May 2013 01:33:33 -0400
