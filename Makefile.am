@@ -35,7 +35,18 @@ EXTRA_DIST = \
   docs/header.html.in \
   test_run.sh \
   eatmydata.in \
-  eatmydata.sh.in
+  eatmydata.sh.in \
+  debian/changelog \
+  debian/compat \
+  debian/control \
+  debian/copyright \
+  debian/docs \
+  debian/README.Debian \
+  debian/rules \
+  debian/source \
+  build_emd_rpm.sh \
+  eatmydata.spec
+  
 
 bin_SCRIPTS = eatmydata
 libexec_SCRIPTS = eatmydata.sh

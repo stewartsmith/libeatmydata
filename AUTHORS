@@ -1,12 +1,14 @@
-Copyright (C) 2008-2012 Stewart Smith <stewart@flamingspork.com>
+Copyright: 2008-2013 Stewart Smith <stewart@percona.com>
+           2013 Alexey Bychko <alexey.bychko@percona.com>
+           2012 Blair Zajac <blair@imageworks.com>
+           2012 Phillip Susi <psusi@ubuntu.com>
+           2011 Modestas Vainius <modax@debian.org>
+           2010-2011 Monty Taylor <mordred@inaugust.com>
+           2010 Olly Betts <olly@survex.com>
+           2010 Pavel Pushkarev <paulmd@ya.ru>
+           2010 Elliot Murphy <elliot@elliotmurphy.com>
+           2009 Eric Wong <normalperson@yhbt.net>
+           2009 Tamas TEVESZ <ice@extreme.hu>
+           2009 Joachim Berdal Haga <jobh@broadpark.no>
+           2008 Mohsen Hariri <m.hariri@gmail.com>
 
-and (C) other contributors:
-Monty Taylor <mordred@inaugust.com>
-Olly Betts <olly@survex.com>
-Eric Wong <normalperson@yhbt.net>
-Mohsen Hariri <m.hariri@gmail.com>
-Tamas TEVESZ <ice@extreme.hu>
-Pavel Pushkarev <paulmd@ya.ru>
-Joachim Berdal Haga <jobh@broadpark.no>
-Phillip Susi <psusi@ubuntu.com>
-Blair Zajac <blair@imageworks.com>

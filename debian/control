@@ -1,12 +1,10 @@
 Source: libeatmydata
 Section: main
 Priority: extra
-Maintainer: Stewart Smith <stewart@percona.com>
+Maintainer: Stewart Smith <stewart@flamingspork.com>
 Build-Depends: debhelper (>= 8.0.0)
 Standards-Version: 3.9.2
 Homepage: https://launchpad.net/libeatmydata
-#Vcs-Git: git://git.debian.org/collab-maint/libeatmydata.git
-#Vcs-Browser: http://git.debian.org/?p=collab-maint/libeatmydata.git;a=summary
 
 Package: eatmydata
 Architecture: any
