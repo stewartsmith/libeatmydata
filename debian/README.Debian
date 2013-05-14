@@ -1,6 +1,6 @@
 libeatmydata for Debian
 -----------------------
 
-<possible notes regarding this package - if none, delete this file>
+The debian packaging of libeatmydata is pretty simple. We have the LD_PRELOAD library along with the eatmydata wrapper.
 
- -- root <root@unknown>  Mon, 13 May 2013 01:33:33 -0400
+ -- Stewart Smith <stewart@flamingspork.com>  Tue, 14 May 2013 16:03:33 +1000
