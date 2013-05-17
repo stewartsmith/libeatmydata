@@ -84,7 +84,8 @@ libeatmydata_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(LIBEATMYDATA_VERSION)
 
 check_PROGRAMS += \
   libeatmydata/test/fsynctest \
-  libeatmydata/test/eatmydatatest
+  libeatmydata/test/eatmydatatest \
+  libeatmydata/test/eatmydatatest_largefile
 
 #
 # Simple libeatmydata application
