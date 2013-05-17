@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Libeatmydata
 #
@@ -52,7 +52,8 @@ export ECHO
 DYLD_LIBRARY_PATH=libeatmydata/.libs
 export DYLD_LIBRARY_PATH
 
-LD_PRELOAD=./.libs/libeatmydata.so DYLD_FORCE_FLAT_NAMESPACE=1 DYLD_INSERT_LIBRARIES=./.libs/libeatmydata.dylib strace -o fsynctest.result.run $1 $LIBEATMYDATA_TEST_ARGS
-ret=`! grep '^[a-z]*sync\|O_SYNC' fsynctest.result.run`
-rm fsynctest.result.run
+LD_PRELOAD=./.libs/libeatmydata.so DYLD_FORCE_FLAT_NAMESPACE=1 DYLD_INSERT_LIBRARIES=./.libs/libeatmydata.dylib strace -o test.result.run $1 $LIBEATMYDATA_TEST_ARGS
+grep '^[a-z]*sync\|O_SYNC' test.result.run
+ret=$?
+rm test.result.run
 exit $ret
