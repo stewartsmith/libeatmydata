@@ -149,6 +149,7 @@ int LIBEATMYDATA_API open(const char* pathname, int flags, ...)
 	return (*libc_open)(pathname,flags,mode);
 }
 
+#ifndef __USE_FILE_OFFSET64
 int LIBEATMYDATA_API open64(const char* pathname, int flags, ...)
 {
 	va_list ap;
@@ -174,6 +175,7 @@ int LIBEATMYDATA_API open64(const char* pathname, int flags, ...)
 
 	return (*libc_open64)(pathname,flags,mode);
 }
+#endif
 
 int LIBEATMYDATA_API fdatasync(int fd)
 {
