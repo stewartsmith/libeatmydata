@@ -59,6 +59,6 @@ rm test.result.run
 if [ $ret == 1 ]; then
 	exit 0;
 else
-	exit $ret;
+	exit 1;
 fi
 
