@@ -25,7 +25,7 @@ int failed_tests = 0;
 
 #define DATAFILENAME "eatmydatatest.dat"
 #define TESTCASE(value, expected, desc) \
-    { if (value != expected) { \
+  { errno=0; if (value != expected) {					\
         fprintf(stderr, "Test case failed: %s (err=%d).\n", desc, value); \
         if (errno != 0) perror("-- System errno (if applicable)"); \
         failed_tests++; \
