@@ -31,6 +31,8 @@ rm -fr %{buildroot}
 %doc README AUTHORS COPYING
 #
 %changelog
+* Fri May 18 2013 Stewart Smith <stewart@flamingspork.com> - 79
+- Version 79, bug fix release
 * Fri Mar 08 2013 Alexey Bychko <alexey.bychko@percona.com> - 0.1
 - Version 0.1, initial package for RPM-based systems
 

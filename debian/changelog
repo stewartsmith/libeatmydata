@@ -1,3 +1,10 @@
+libeatmydata (79-1) unstable; urgency=low
+
+  * new libeatmydata version
+  * Use libeatmydata version number for package
+
+ -- Stewart Smith <stewart@flamingspork.com>  Fri, 18 May 2013 16:25:33 +1000
+
 libeatmydata (0.1-1) unstable; urgency=low
 
   * Initial release (Closes: #JEN-16)  
