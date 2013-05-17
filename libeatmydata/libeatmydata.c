@@ -36,6 +36,7 @@ int fdatasync(int fd);
 #endif
 
 typedef int (*libc_open_t)(const char*, int, ...);
+typedef int (*libc_open64_t)(const char*, int, ...);
 typedef int (*libc_fsync_t)(int);
 typedef int (*libc_sync_t)(void);
 typedef int (*libc_fdatasync_t)(int);
@@ -45,6 +46,7 @@ typedef int (*libc_sync_file_range_t)(int, off64_t, off64_t, unsigned int);
 #endif
 
 static libc_open_t libc_open= NULL;
+static libc_open64_t libc_open64= NULL;
 static libc_fsync_t libc_fsync= NULL;
 static libc_sync_t libc_sync= NULL;
 static libc_fdatasync_t libc_fdatasync= NULL;
@@ -70,6 +72,7 @@ void __attribute__ ((constructor)) eatmydata_init(void);
 void __attribute__ ((constructor)) eatmydata_init(void)
 {
 	ASSIGN_DLSYM_OR_DIE(open);
+	ASSIGN_DLSYM_OR_DIE(open64);
 	ASSIGN_DLSYM_OR_DIE(fsync);
 	ASSIGN_DLSYM_OR_DIE(sync);
 	ASSIGN_DLSYM_OR_DIE(fdatasync);
@@ -144,6 +147,32 @@ int LIBEATMYDATA_API open(const char* pathname, int flags, ...)
 		flags &= ~(O_SYNC|O_DSYNC);
 
 	return (*libc_open)(pathname,flags,mode);
+}
+
+int LIBEATMYDATA_API open64(const char* pathname, int flags, ...)
+{
+	va_list ap;
+	mode_t mode;
+
+	va_start(ap, flags);
+#if SIZEOF_MODE_T < SIZEOF_INT
+	mode= (mode_t) va_arg(ap, int);
+#else
+	mode= va_arg(ap, mode_t);
+#endif
+	va_end(ap);
+
+	/* In pthread environments the dlsym() may call our open(). */
+	/* We simply ignore it because libc is already loaded       */
+	if (!libc_open64) {
+		errno = EFAULT;
+		return -1;
+	}
+
+	if (eatmydata_is_hungry())
+		flags &= ~(O_SYNC|O_DSYNC);
+
+	return (*libc_open64)(pathname,flags,mode);
 }
 
 int LIBEATMYDATA_API fdatasync(int fd)
