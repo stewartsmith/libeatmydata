@@ -56,4 +56,9 @@ LD_PRELOAD=./.libs/libeatmydata.so DYLD_FORCE_FLAT_NAMESPACE=1 DYLD_INSERT_LIBRA
 grep '^[a-z]*sync\|O_SYNC' test.result.run
 ret=$?
 rm test.result.run
-exit $ret
+if [ $ret == 1 ]; then
+	exit 0;
+else
+	exit $ret;
+fi
+
