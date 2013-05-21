@@ -16,6 +16,8 @@
 #include "config.h"
 #include "libeatmydata/visibility.h"
 
+#undef _FILE_OFFSET_BITS // Hack to get open and open64 on 32bit
+#undef __USE_FILE_OFFSET64
 #include <sys/types.h>
 #include <unistd.h>
 #include <errno.h>
