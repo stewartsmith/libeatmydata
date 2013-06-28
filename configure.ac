@@ -2,6 +2,7 @@
 # Libeatmydata
 #
 # Copyright (C) 2009-2010 Monty Taylor, Eric Day
+# Copyright (C) 2010-2013 Stewart Smith
 # All rights reserved.
 #
 # Use and distribution licensed under the BSD license.  See
@@ -9,7 +10,7 @@
 #
 
 
-AC_INIT([libeatmydata],[79], [http://www.flamingspork.com/projects/libeatmydata])
+AC_INIT([libeatmydata],[82], [http://www.flamingspork.com/projects/libeatmydata])
 AC_CONFIG_SRCDIR([libeatmydata/libeatmydata.c])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([m4])
@@ -20,7 +21,7 @@ PANDORA_CANONICAL_TARGET(less-warnings)
 LIBEATMYDATA_VERSION_CURRENT=2
 
 # Increment if source code has changed, set to zero if current is incremented.
-LIBEATMYDATA_VERSION_REVISION=0
+LIBEATMYDATA_VERSION_REVISION=1
 
 # Increment if interfaces have been added, set to zero if interfaces have been
 # removed or changed.
