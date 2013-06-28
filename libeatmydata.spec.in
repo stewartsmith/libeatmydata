@@ -2,7 +2,7 @@ Name:           @PACKAGE@
 Version:        @PACKAGE_VERSION@
 Release:        @RELEASE@%{?dist}
 Group:          Development/Tools
-License:        GPLv3
+License:        GPL-3
 Summary:        An LD_PRELOAD library (libeatmydata.so) and script (eatmydata) designed to disable fsync and friends
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root
 BuildRequires:  autoconf, automake, make
