@@ -2,11 +2,12 @@ Name:           @PACKAGE@
 Version:        @PACKAGE_VERSION@
 Release:        @RELEASE@%{?dist}
 Group:          Development/Tools
-License:        GPL-3
-Summary:        An LD_PRELOAD library (libeatmydata.so) and script (eatmydata) designed to disable fsync and friends
+License:        GPL-3.0
+Summary:        An LD_PRELOAD library with script (eatmydata) which disables fsync and friends
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root
 BuildRequires:  autoconf, automake, make
 Source:         %{name}-%{version}.tar.gz
+Url:		http://www.flamingspork.com/projects/libeatmydata/
 #
 %description
 This package contains a small LD_PRELOAD library (libeatmydata) and a couple of helper utilities designed to transparently disable fsync and friends (like open(O_SYNC)). This has two side-effects: making software that writes data safely to disk a lot quicker and making this software no longer crash safe..
@@ -14,19 +15,25 @@ This package contains a small LD_PRELOAD library (libeatmydata) and a couple of 
 %prep
 %setup -q
 %build
-%configure
+%configure --disable-static
 %{__make}
 %install
 rm -fr %{buildroot}
 %makeinstall
 %clean
 rm -fr %{buildroot}
+%post
+/sbin/ldconfig > /dev/null 2>&1
+# Can't use -p /sbin/ldconfig, that gives '/sbin/ldconfig: relative path `0' used to build cache' error on some systems
+%postun
+umask 007
+/sbin/ldconfig > /dev/null 2>&1
 #
 %files
 %defattr(-,root,root)
-%attr(755,-,-) %{_bindir}/eatmydata
-%{_libdir}/*
-%{_libexecdir}/*
+%attr(755,root,root) %{_bindir}/eatmydata
+%{_libdir}/libeatmydata.so*
+%{_libexecdir}/eatmydata.sh
 %doc README AUTHORS COPYING
 #
 %changelog

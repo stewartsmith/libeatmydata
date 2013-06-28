@@ -80,7 +80,10 @@ libeatmydata_la_CFLAGS = \
 	-DBUILDING_LIBEATMYDATA
 
 libeatmydata_la_LIBADD = $(LIBDL_LIBS) -lpthread
-libeatmydata_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(LIBEATMYDATA_VERSION)
+libeatmydata_la_LDFLAGS = $(AM_LDFLAGS) -avoid-version
+
+install-exec-hook:
+	find $(DESTDIR)$(libdir) -type f -name \*.la |xargs rm -f
 
 check_PROGRAMS += \
   libeatmydata/test/fsynctest \
