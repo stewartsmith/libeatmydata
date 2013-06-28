@@ -54,7 +54,7 @@ AC_CHECK_FUNCS(fdatasync)
 AC_CHECK_DECLS(sync_file_range)
 AC_CHECK_FUNCS(sync_file_range)
 
-AC_CONFIG_FILES(Makefile docs/header.html)
+AC_CONFIG_FILES(Makefile docs/header.html libeatmydata.spec)
 
 AC_OUTPUT
 

@@ -1,5 +1,5 @@
-Name:           eatmydata
-Version:        @VERSION@
+Name:           @PACKAGE@
+Version:        @PACKAGE_VERSION@
 Release:        @RELEASE@%{?dist}
 Group:          Development/Tools
 License:        GPLv3
@@ -25,7 +25,7 @@ rm -fr %{buildroot}
 #
 %files
 %defattr(-,root,root)
-%attr(755,-,-) %{_bindir}/%{name}
+%attr(755,-,-) %{_bindir}/eatmydata
 %{_libdir}/*
 %{_libexecdir}/*
 %doc README AUTHORS COPYING
