@@ -25,6 +25,7 @@
 #include <fcntl.h>
 #include <dlfcn.h>
 #include <stdarg.h>
+#include <pthread.h>
 
 /* 
 #define CHECK_FILE "/tmp/eatmydata"
@@ -109,6 +110,7 @@ static int eatmydata_is_hungry(void)
 int LIBEATMYDATA_API fsync(int fd)
 {
 	if (eatmydata_is_hungry()) {
+		pthread_testcancel();
 		errno= 0;
 		return 0;
 	}
@@ -119,8 +121,10 @@ int LIBEATMYDATA_API fsync(int fd)
 /* no errors are defined for this function */
 void LIBEATMYDATA_API sync(void)
 {
-	if (eatmydata_is_hungry())
+	if (eatmydata_is_hungry()) {
+		pthread_testcancel();
 		return;
+	}
 
 	(*libc_sync)();
 }
@@ -182,6 +186,7 @@ int LIBEATMYDATA_API open64(const char* pathname, int flags, ...)
 int LIBEATMYDATA_API fdatasync(int fd)
 {
 	if (eatmydata_is_hungry()) {
+		pthread_testcancel();
 		errno= 0;
 		return 0;
 	}
@@ -192,6 +197,7 @@ int LIBEATMYDATA_API fdatasync(int fd)
 int LIBEATMYDATA_API msync(void *addr, size_t length, int flags)
 {
 	if (eatmydata_is_hungry()) {
+		pthread_testcancel();
 		errno= 0;
 		return 0;
 	}
@@ -203,6 +209,7 @@ int LIBEATMYDATA_API msync(void *addr, size_t length, int flags)
 int sync_file_range(int fd, off64_t offset, off64_t nbytes, unsigned int flags)
 {
 	if (eatmydata_is_hungry()) {
+		pthread_testcancel();
 		errno= 0;
 		return 0;
 	}

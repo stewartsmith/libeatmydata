@@ -79,13 +79,16 @@ libeatmydata_la_CFLAGS = \
   $(NO_WERROR) \
 	-DBUILDING_LIBEATMYDATA
 
-libeatmydata_la_LIBADD = $(LIBDL_LIBS)
+libeatmydata_la_LIBADD = $(LIBDL_LIBS) -lpthread
 libeatmydata_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(LIBEATMYDATA_VERSION)
 
 check_PROGRAMS += \
   libeatmydata/test/fsynctest \
+  libeatmydata/test/tst-cancel4 \
   libeatmydata/test/eatmydatatest \
   libeatmydata/test/eatmydatatest_largefile
+
+libeatmydata_test_tst_cancel4_LDADD= -lpthread
 
 #
 # Simple libeatmydata application
