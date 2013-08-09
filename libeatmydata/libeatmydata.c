@@ -122,7 +122,6 @@ int LIBEATMYDATA_API fsync(int fd)
 void LIBEATMYDATA_API sync(void)
 {
 	if (eatmydata_is_hungry()) {
-		pthread_testcancel();
 		return;
 	}
 
