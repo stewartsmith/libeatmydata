@@ -1,42 +1,57 @@
-Name:           @PACKAGE@
+Name:           libeatmydata
 Version:        @PACKAGE_VERSION@
 Release:        @RELEASE@%{?dist}
 Group:          Development/Tools
-License:        GPL-3.0
-Summary:        An LD_PRELOAD library with script (eatmydata) which disables fsync and friends
+License:        GPLv3
+Summary:        Library and utilities designed to disable fsync and friends
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root
 BuildRequires:  autoconf, automake, make
 Source:         %{name}-%{version}.tar.gz
-Url:		http://www.flamingspork.com/projects/libeatmydata/
-#
+URL:            https://www.flamingspork.com/projects/libeatmydata/
+
 %description
-This package contains a small LD_PRELOAD library (libeatmydata) and a couple of helper utilities designed to transparently disable fsync and friends (like open(O_SYNC)). This has two side-effects: making software that writes data safely to disk a lot quicker and making this software no longer crash safe..
-#
+This package contains a small LD_PRELOAD library (libeatmydata) and a couple 
+of helper utilities designed to transparently disable fsync and friends 
+(like open(O_SYNC)). This has two side-effects: making software that writes 
+data safely to disk a lot quicker and making this software no longer 
+crash safe..
+
+
 %prep
+
 %setup -q
+
 %build
-%configure --disable-static
+autoreconf --force --install
+
+%configure
 %{__make}
+
 %install
 rm -fr %{buildroot}
+
 %makeinstall
+find %{buildroot} -name "*.la" -print0 | xargs -0 rm -f
+
 %clean
 rm -fr %{buildroot}
-%post
-/sbin/ldconfig > /dev/null 2>&1
-# Can't use -p /sbin/ldconfig, that gives '/sbin/ldconfig: relative path `0' used to build cache' error on some systems
-%postun
-umask 007
-/sbin/ldconfig > /dev/null 2>&1
 #
 %files
 %defattr(-,root,root)
-%attr(755,root,root) %{_bindir}/eatmydata
-%{_libdir}/libeatmydata.so*
-%{_libexecdir}/eatmydata.sh
-%doc README AUTHORS COPYING
+%attr(755,-,-) %{_bindir}/eatmydata
+%{_libdir}/*
+%{_libexecdir}/*
+
+%doc README AUTHORS
 #
+
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
+
 %changelog
+* Fri Jul 26 2013 Jaroslav Kortus <jkortus@redhat.com> - 82-1
+- Version 82, bug fix release
+- spec file changed to meet fedora packaging guidelines
 * Fri May 18 2013 Stewart Smith <stewart@flamingspork.com> - 79
 - Version 79, bug fix release
 * Fri Mar 08 2013 Alexey Bychko <alexey.bychko@percona.com> - 0.1
