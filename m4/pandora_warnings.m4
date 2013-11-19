@@ -125,16 +125,13 @@ AC_DEFUN([PANDORA_WARNINGS],[
         BASE_WARNINGS="-w1 -Werror -Wcheck -Wp64 -Woverloaded-virtual -Wcast-qual -diag-disable 188,981,2259,2203,1683,1684"
       ])
       CC_WARNINGS="${BASE_WARNINGS}"
-      CXX_WARNINGS="${BASE_WARNINGS}"
       PROTOSKIP_WARNINGS="-diag-disable 188,981,967,2259,1683,1684,2203"
       
     ],[
       m4_if(PW_LESS_WARNINGS,[no],[
         BASE_WARNINGS_FULL="${W_CONVERSION} -Wstrict-aliasing -Wswitch-enum "
         CC_WARNINGS_FULL="-Wswitch-default -Wswitch-enum -Wwrite-strings"
-        CXX_WARNINGS_FULL="-Weffc++ -Wold-style-cast"
         NO_OLD_STYLE_CAST="-Wno-old-style-cast"
-        NO_EFF_CXX="-Wno-effc++"
       ],[
         BASE_WARNINGS_FULL="${NO_STRICT_ALIASING}"
       ])
@@ -238,46 +235,7 @@ uint16_t x= htons(80);
       ])
 
       CC_WARNINGS="${BASE_WARNINGS} -Wstrict-prototypes -Wmissing-prototypes -Wredundant-decls -Wmissing-declarations -Wcast-align ${CC_WARNINGS_FULL}"
-      CXX_WARNINGS="${BASE_WARNINGS} -Woverloaded-virtual -Wnon-virtual-dtor -Wctor-dtor-privacy -Wno-long-long ${CXX_WARNINGS_FULL}"
 
-      AC_CACHE_CHECK([whether it is safe to use -Wmissing-declarations from C++],
-        [ac_cv_safe_to_use_Wmissing_declarations_],
-        [AC_LANG_PUSH(C++)
-         save_CXXFLAGS="$CXXFLAGS"
-         CXXFLAGS="-Werror -pedantic -Wmissing-declarations ${AM_CXXFLAGS}"
-         AC_COMPILE_IFELSE([
-           AC_LANG_PROGRAM(
-           [[
-#include <stdio.h>
-           ]], [[]])
-        ],
-        [ac_cv_safe_to_use_Wmissing_declarations_=yes],
-        [ac_cv_safe_to_use_Wmissing_declarations_=no])
-        CXXFLAGS="$save_CXXFLAGS"
-        AC_LANG_POP()
-      ])
-      AS_IF([test "$ac_cv_safe_to_use_Wmissing_declarations_" = "yes"],
-            [CXX_WARNINGS="${CXX_WARNINGS} -Wmissing-declarations"])
-  
-      AC_CACHE_CHECK([whether it is safe to use -Wframe-larger-than],
-        [ac_cv_safe_to_use_Wframe_larger_than_],
-        [AC_LANG_PUSH(C++)
-         save_CXXFLAGS="$CXXFLAGS"
-         CXXFLAGS="-Werror -pedantic -Wframe-larger-than=32768 ${AM_CXXFLAGS}"
-         AC_COMPILE_IFELSE([
-           AC_LANG_PROGRAM(
-           [[
-#include <stdio.h>
-           ]], [[]])
-        ],
-        [ac_cv_safe_to_use_Wframe_larger_than_=yes],
-        [ac_cv_safe_to_use_Wframe_larger_than_=no])
-        CXXFLAGS="$save_CXXFLAGS"
-        AC_LANG_POP()
-      ])
-      AS_IF([test "$ac_cv_safe_to_use_Wframe_larger_than_" = "yes"],
-            [CXX_WARNINGS="${CXX_WARNINGS} -Wframe-larger-than=32768"])
-  
       AC_CACHE_CHECK([whether it is safe to use -Wlogical-op],
         [ac_cv_safe_to_use_Wlogical_op_],
         [save_CFLAGS="$CFLAGS"
@@ -294,60 +252,6 @@ uint16_t x= htons(80);
       AS_IF([test "$ac_cv_safe_to_use_Wlogical_op_" = "yes"],
             [CC_WARNINGS="${CC_WARNINGS} -Wlogical-op"])
   
-      AC_CACHE_CHECK([whether it is safe to use -Wredundant-decls from C++],
-        [ac_cv_safe_to_use_Wredundant_decls_],
-        [AC_LANG_PUSH(C++)
-         save_CXXFLAGS="${CXXFLAGS}"
-         CXXFLAGS="${W_FAIL} -pedantic -Wredundant-decls ${AM_CXXFLAGS}"
-         AC_COMPILE_IFELSE(
-           [AC_LANG_PROGRAM([
-template <typename E> struct C { void foo(); };
-template <typename E> void C<E>::foo() { }
-template <> void C<int>::foo();
-            AC_INCLUDES_DEFAULT])],
-            [ac_cv_safe_to_use_Wredundant_decls_=yes],
-            [ac_cv_safe_to_use_Wredundant_decls_=no])
-         CXXFLAGS="${save_CXXFLAGS}"
-         AC_LANG_POP()])
-      AS_IF([test "$ac_cv_safe_to_use_Wredundant_decls_" = "yes"],
-            [CXX_WARNINGS="${CXX_WARNINGS} -Wredundant-decls"],
-            [CXX_WARNINGS="${CXX_WARNINGS} -Wno-redundant-decls"])
-
-      AC_CACHE_CHECK([whether it is safe to use -Wattributes from C++],
-        [ac_cv_safe_to_use_Wattributes_],
-        [AC_LANG_PUSH(C++)
-         save_CXXFLAGS="${CXXFLAGS}"
-         CXXFLAGS="${W_FAIL} -pedantic -Wattributes -fvisibility=hidden ${AM_CXXFLAGS}"
-         AC_COMPILE_IFELSE(
-           [AC_LANG_PROGRAM([
-#include <google/protobuf/message.h>
-#include <google/protobuf/descriptor.h>
-
-
-const ::google::protobuf::EnumDescriptor* Table_TableOptions_RowType_descriptor();
-enum Table_TableOptions_RowType {
-  Table_TableOptions_RowType_ROW_TYPE_DEFAULT = 0,
-  Table_TableOptions_RowType_ROW_TYPE_FIXED = 1,
-  Table_TableOptions_RowType_ROW_TYPE_DYNAMIC = 2,
-  Table_TableOptions_RowType_ROW_TYPE_COMPRESSED = 3,
-  Table_TableOptions_RowType_ROW_TYPE_REDUNDANT = 4,
-  Table_TableOptions_RowType_ROW_TYPE_COMPACT = 5,
-  Table_TableOptions_RowType_ROW_TYPE_PAGE = 6
-};
-
-namespace google {
-namespace protobuf {
-template <>
-inline const EnumDescriptor* GetEnumDescriptor<Table_TableOptions_RowType>() {
-  return Table_TableOptions_RowType_descriptor();
-}
-}
-}
-            ])],
-            [ac_cv_safe_to_use_Wattributes_=yes],
-            [ac_cv_safe_to_use_Wattributes_=no])
-          CXXFLAGS="${save_CXXFLAGS}"
-          AC_LANG_POP()])
       AC_CACHE_CHECK([whether it is safe to use -Wno-attributes],
         [ac_cv_safe_to_use_Wno_attributes_],
         [save_CFLAGS="$CFLAGS"
@@ -410,14 +314,11 @@ inline const EnumDescriptor* GetEnumDescriptor<Table_TableOptions_RowType>() {
 
     m4_if(PW_LESS_WARNINGS, [no],[
       CC_WARNINGS_FULL="-erroff=E_STATEMENT_NOT_REACHED,E_INTEGER_OVERFLOW_DETECTED${W_PASTE_RESULT}"
-      CXX_WARNINGS_FULL="-erroff=inllargeuse"
     ],[
       CC_WARNINGS_FULL="-erroff=E_ATTRIBUTE_NOT_VAR,E_STATEMENT_NOT_REACHED"
-      CXX_WARNINGS_FULL="-erroff=attrskipunsup,doubunder,reftotemp,inllargeuse,truncwarn1,signextwarn,inllargeint"
     ])
 
     CC_WARNINGS="-v -errtags=yes ${W_FAIL} ${CC_WARNINGS_FULL}"
-    CXX_WARNINGS="+w +w2 -xwe -xport64 -errtags=yes ${CXX_WARNINGS_FULL} ${W_FAIL}"
     PROTOSKIP_WARNINGS="-erroff=attrskipunsup,doubunder,reftotemp,wbadinitl,identexpected,inllargeuse,truncwarn1,signextwarn,partinit,notused,badargtype2w,wbadinit"
     BOOSTSKIP_WARNINGS="-erroff=attrskipunsup,doubunder,reftotemp,inllargeuse,truncwarn1,signextwarn,inllargeint,hidef,wvarhidenmem"
     PERMISSIVE_WARNINGS="-erroff=attrskipunsup,doubunder,reftotemp,inllargeuse,truncwarn1,signextwarn,inllargeint,hidef,wvarhidenmem,notused,badargtype2w,wunreachable"
@@ -432,7 +333,6 @@ inline const EnumDescriptor* GetEnumDescriptor<Table_TableOptions_RowType>() {
   AC_SUBST(NO_UNREACHED)
   AC_SUBST(NO_SHADOW)
   AC_SUBST(NO_STRICT_ALIASING)
-  AC_SUBST(NO_EFF_CXX)
   AC_SUBST(NO_OLD_STYLE_CAST)
   AC_SUBST(PROTOSKIP_WARNINGS)
   AC_SUBST(INNOBASE_SKIP_WARNINGS)

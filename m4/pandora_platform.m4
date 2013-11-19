@@ -109,7 +109,6 @@ AC_DEFUN([PANDORA_PLATFORM],[
   AS_IF([test "x$TARGET_OSX" = "xtrue"],[
     AS_IF([test "x$ac_enable_fat_binaries" = "xyes"],[
       AM_CFLAGS="-arch i386 -arch x86_64 -arch ppc"
-      AM_CXXFLAGS="-arch i386 -arch x86_64 -arch ppc"
       AM_LDFLAGS="-arch i386 -arch x86_64 -arch ppc"
     ])
   ])

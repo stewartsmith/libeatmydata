@@ -18,9 +18,7 @@ AC_DEFUN([PANDORA_PTHREAD_YIELD],[
   AC_REQUIRE([ACX_PTHREAD])
 
   save_CFLAGS="${CFLAGS}"
-  save_CXXFLAGS="${CXXFLAGS}"
   CFLAGS="${PTHREAD_CFLAGS} ${CFLAGS}"
-  CXXFLAGS="${PTHREAD_CFLAGS} ${CXXFLAGS}"
   dnl Some OSes like Mac OS X have that as a replacement for pthread_yield()
   AC_CHECK_FUNCS(pthread_yield_np)
   AC_CACHE_CHECK([if pthread_yield takes zero arguments],
@@ -234,7 +232,6 @@ then
 fi
 
   CFLAGS="${save_CFLAGS}"
-  CXXFLAGS="${save_CXXFLAGS}"
 ])
 
 
@@ -242,7 +239,6 @@ AC_DEFUN([_PANDORA_SEARCH_PTHREAD],[
   AC_REQUIRE([ACX_PTHREAD])
   LIBS="${PTHREAD_LIBS} ${LIBS}"
   AM_CFLAGS="${PTHREAD_CFLAGS} ${AM_CFLAGS}"
-  AM_CXXFLAGS="${PTHREAD_CFLAGS} ${AM_CXXFLAGS}"
   PANDORA_PTHREAD_YIELD
 ])
 

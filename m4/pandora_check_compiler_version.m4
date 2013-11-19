@@ -20,18 +20,3 @@ AC_DEFUN([PANDORA_CHECK_C_VERSION],[
   AC_SUBST(CC_VERSION)
 ])
 
-
-AC_DEFUN([PANDORA_CHECK_CXX_VERSION], [
-  dnl Print version of CXX compiler
-  AC_MSG_CHECKING("C++ Compiler version")
-  AS_IF([test "$GCC" = "yes"],[
-    CXX_VERSION=`$CXX --version | sed 1q`
-  ],[AS_IF([test "$SUNCC" = "yes"],[
-      CXX_VERSION=`$CXX -V 2>&1 | sed 1q`
-    ],[
-    CXX_VERSION=""
-    ])
-  ])
-  AC_MSG_RESULT("$CXX_VERSION")
-  AC_SUBST(CXX_VERSION)
-])

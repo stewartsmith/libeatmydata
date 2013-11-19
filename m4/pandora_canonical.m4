@@ -43,7 +43,6 @@ AC_DEFUN([PANDORA_CANONICAL_TARGET],[
   ifdef([m4_define],,[define([m4_define],   defn([define]))])
   ifdef([m4_undefine],,[define([m4_undefine],   defn([undefine]))])
   m4_define([PCT_ALL_ARGS],[$*])
-  m4_define([PCT_REQUIRE_CXX],[no])
   m4_define([PCT_FORCE_GCC42],[no])
   m4_define([PCT_DONT_SUPPRESS_INCLUDE],[no])
   m4_define([PCT_NO_VC_CHANGELOG],[no])
@@ -51,10 +50,6 @@ AC_DEFUN([PANDORA_CANONICAL_TARGET],[
   m4_define([PCT_USE_VISIBILITY],[yes])
   m4_foreach([pct_arg],[$*],[
     m4_case(pct_arg,
-      [require-cxx], [
-        m4_undefine([PCT_REQUIRE_CXX])
-        m4_define([PCT_REQUIRE_CXX],[yes])
-      ],
       [force-gcc42], [
         m4_undefine([PCT_FORCE_GCC42])
         m4_define([PCT_FORCE_GCC42],[yes])
@@ -92,8 +87,6 @@ AC_DEFUN([PANDORA_CANONICAL_TARGET],[
   # set CFLAGS on the command line, since that should take ultimate precedence
   AS_IF([test "x${ac_cv_env_CFLAGS_set}" = "x"],
         [CFLAGS=""])
-  AS_IF([test "x${ac_cv_env_CXXFLAGS_set}" = "x"],
-        [CXXFLAGS=""])
   
   AC_CANONICAL_TARGET
   
@@ -143,7 +136,6 @@ AC_DEFUN([PANDORA_CANONICAL_TARGET],[
 
   dnl Once we can use a modern autoconf, we can use this
   dnl AC_PROG_CC_C99
-  AC_REQUIRE([AC_PROG_CXX])
   PANDORA_EXTENSIONS
   AM_PROG_CC_C_O
 
@@ -153,25 +145,12 @@ AC_DEFUN([PANDORA_CANONICAL_TARGET],[
 
   PANDORA_LIBTOOL
 
-  dnl autoconf doesn't automatically provide a fail-if-no-C++ macro
-  dnl so we check c++98 features and fail if we don't have them, mainly
-  dnl for that reason
-  PANDORA_CHECK_CXX_STANDARD
-  m4_if(PCT_REQUIRE_CXX, [yes], [
-    AS_IF([test "$ac_cv_cxx_stdcxx_98" = "no"],[
-      PANDORA_MSG_ERROR([No working C++ Compiler has been found. ${PACKAGE} requires a C++ compiler that can handle C++98])
-    ])
-  ])
-  PANDORA_CXX_CSTDINT
-  PANDORA_CXX_CINTTYPES
-  
   m4_if(m4_substr(m4_esyscmd(test -d gnulib && echo 0),0,1),0,[
     gl_INIT
     AC_CONFIG_LIBOBJ_DIR([gnulib])
   ])
 
   PANDORA_CHECK_C_VERSION
-  PANDORA_CHECK_CXX_VERSION
 
   AC_C_BIGENDIAN
   AC_C_CONST
@@ -413,10 +392,8 @@ inline To down_cast(From* f) {                   // so we only accept pointers
   ])
 
   AM_CFLAGS="${AM_CFLAGS} ${CC_WARNINGS} ${CC_PROFILING} ${CC_COVERAGE}"
-  AM_CXXFLAGS="${AM_CXXFLAGS} ${CXX_WARNINGS} ${CC_PROFILING} ${CC_COVERAGE}"
 
   AC_SUBST([AM_CFLAGS])
-  AC_SUBST([AM_CXXFLAGS])
   AC_SUBST([AM_CPPFLAGS])
   AC_SUBST([AM_LDFLAGS])
 

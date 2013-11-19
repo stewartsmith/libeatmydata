@@ -49,19 +49,16 @@ AC_DEFUN([PANDORA_CHECK_VISIBILITY],
     AC_MSG_RESULT([$gl_cv_cc_visibility])
     if test $gl_cv_cc_visibility = yes; then
       CFLAG_VISIBILITY="-fvisibility=hidden"
-      CXXFLAG_VISIBILITY="-fvisibility=hidden -fvisibility-inlines-hidden"
       NO_VISIBILITY="-fvisibility=default"
       HAVE_VISIBILITY=1
     fi
   ])
   AS_IF([test "x$SUNCC" = "xyes"],[
     CFLAG_VISIBILITY="-xldscope=hidden"
-    CXXFLAG_VISIBILITY="-xldscope=hidden"
     NO_VISIBILITY="-xldscope=global"
     HAVE_VISIBILITY=1
   ])
   AC_SUBST([CFLAG_VISIBILITY])
-  AC_SUBST([CXXFLAG_VISIBILITY])
   AC_SUBST([NO_VISIBILITY])
   AC_SUBST([HAVE_VISIBILITY])
   AC_DEFINE_UNQUOTED([HAVE_VISIBILITY], [$HAVE_VISIBILITY],
@@ -71,5 +68,4 @@ AC_DEFUN([PANDORA_CHECK_VISIBILITY],
 AC_DEFUN([PANDORA_ENABLE_VISIBILITY],[
   AC_REQUIRE([PANDORA_CHECK_VISIBILITY])
   AM_CFLAGS="${AM_CFLAGS} ${CFLAG_VISIBILITY}"
-  AM_CXXFLAGS="${AM_CXXFLAGS} ${CXXFLAG_VISIBILITY}"
 ])

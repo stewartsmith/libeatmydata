@@ -30,7 +30,6 @@ int main(int argc, char** argv)
     ])
     AS_IF([test "$pandora_cv_use_pipe" = "yes"],[
       AM_CFLAGS="-pipe ${AM_CFLAGS}"
-      AM_CXXFLAGS="-pipe ${AM_CXXFLAGS}"
     ])
   ])
 ])
