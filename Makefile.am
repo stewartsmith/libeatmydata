@@ -19,6 +19,7 @@
 ACLOCAL_AMFLAGS = -I m4
 #LDADD = libeatmydata.la
 
+AUTOMAKE_OPTIONS = parallel-tests
 
 bin_PROGRAMS =
 check_PROGRAMS =
@@ -99,7 +100,7 @@ libeatmydata_test_tst_cancel4_LDADD= -lpthread
 
 TESTS = $(check_PROGRAMS)
 
-TESTS_ENVIRONMENT = ${top_srcdir}/test_run.sh
+LOG_COMPILER = ${top_srcdir}/test_run.sh
 
 check-verbose:
 	@LIBEATMYDATA_TEST_ARGS="v" make check
