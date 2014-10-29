@@ -47,7 +47,7 @@ EXTRA_DIST = \
   debian/source \
   build_emd_rpm.sh \
   libeatmydata.spec
-  
+
 
 bin_SCRIPTS = eatmydata
 libexec_SCRIPTS = eatmydata.sh
