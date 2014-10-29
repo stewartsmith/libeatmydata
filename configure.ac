@@ -1,8 +1,9 @@
 #
 # Libeatmydata
 #
+# Build infrastructure:
 # Copyright (C) 2009-2010 Monty Taylor, Eric Day
-# Copyright (C) 2010-2013 Stewart Smith
+# Copyright (C) 2010-2014 Stewart Smith
 # All rights reserved.
 #
 # Use and distribution licensed under the BSD license.  See

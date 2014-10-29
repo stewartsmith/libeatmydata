@@ -2,6 +2,8 @@
 #
 # Libeatmydata
 #
+# Copyright (C) 2010-2014 Stewart Smith (stewart@flamingspork.com)
+# Based heavily on work by:
 # Copyright (C) 2010 Eric Day (eday@oddments.org)
 # All rights reserved.
 #
