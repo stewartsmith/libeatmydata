@@ -69,11 +69,13 @@ static libc_sync_file_range_t libc_sync_file_range= NULL;
 
 
 int LIBEATMYDATA_API msync(void *addr, size_t length, int flags);
+static int initing = 0;
 
 void __attribute__ ((constructor)) eatmydata_init(void);
 
 void __attribute__ ((constructor)) eatmydata_init(void)
 {
+	initing = 1;
 	ASSIGN_DLSYM_OR_DIE(open);
 	ASSIGN_DLSYM_OR_DIE(open64);
 	ASSIGN_DLSYM_OR_DIE(fsync);
@@ -83,6 +85,7 @@ void __attribute__ ((constructor)) eatmydata_init(void)
 #ifdef HAVE_SYNC_FILE_RANGE
 	ASSIGN_DLSYM_IF_EXIST(sync_file_range);
 #endif
+	initing = 0;
 }
 
 static int eatmydata_is_hungry(void)
@@ -143,7 +146,7 @@ int LIBEATMYDATA_API open(const char* pathname, int flags, ...)
 
 	/* In pthread environments the dlsym() may call our open(). */
 	/* We simply ignore it because libc is already loaded       */
-	if (!libc_open) {
+	if (initing) {
 		errno = EFAULT;
 		return -1;
 	}
@@ -170,7 +173,7 @@ int LIBEATMYDATA_API open64(const char* pathname, int flags, ...)
 
 	/* In pthread environments the dlsym() may call our open(). */
 	/* We simply ignore it because libc is already loaded       */
-	if (!libc_open64) {
+	if (initing) {
 		errno = EFAULT;
 		return -1;
 	}
