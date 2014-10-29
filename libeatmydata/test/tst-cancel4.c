@@ -88,8 +88,6 @@ static pthread_barrier_t b2;
 # define IPC_ADDVAL 0
 #endif
 
-#define WRITE_BUFFER_SIZE 4096
-
 /* Cleanup handling test.  */
 static int cl_called;
 
@@ -281,11 +279,6 @@ do_test (void)
   if (getsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, &len) < 0)
     {
       perror ("getsockopt");
-      exit (1);
-    }
-  if (val >= WRITE_BUFFER_SIZE)
-    {
-      puts ("minimum write buffer size too large");
       exit (1);
     }
   setsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, sizeof(val));

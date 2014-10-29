@@ -55,6 +55,11 @@ DYLD_LIBRARY_PATH=libeatmydata/.libs
 export DYLD_LIBRARY_PATH
 
 LD_PRELOAD=./.libs/libeatmydata.so DYLD_FORCE_FLAT_NAMESPACE=1 DYLD_INSERT_LIBRARIES=./.libs/libeatmydata.dylib strace -o test.result.run $1 $LIBEATMYDATA_TEST_ARGS
+eret=$?
+if [ $eret != 0 ]; then
+	exit 2;
+fi
+
 grep '^[a-z]*sync\|O_SYNC' test.result.run
 ret=$?
 rm test.result.run
