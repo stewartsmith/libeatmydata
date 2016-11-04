@@ -32,8 +32,6 @@ CLEANFILES = $(bin_SCRIPTS) $(libexec_SCRIPTS)
 DISTCLEANFILES = config/top.h
 EXTRA_DIST = \
   fsynctest.result \
-  docs/Doxyfile \
-  docs/header.html.in \
   test_run.sh \
   eatmydata.in \
   eatmydata.sh.in \
@@ -128,16 +126,6 @@ check-strace:
 
 check-truss:
 	@LIBEATMYDATA_TEST_PREFIX="truss -c" make check
-
-docs: all
-	@echo "/**" > docs/mainpage.h
-	@echo "@mainpage README" >> docs/mainpage.h
-	@echo "<pre>" >> docs/mainpage.h
-	@cat ${top_srcdir}/README >> docs/mainpage.h
-	@echo "</pre>" >> docs/mainpage.h
-	@echo "*/" >> docs/mainpage.h
-	${DOXYGEN} ${top_srcdir}/docs/Doxyfile
-	@rm docs/mainpage.h
 
 lcov: lcov-clean check
 	@echo
