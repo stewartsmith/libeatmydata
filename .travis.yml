@@ -1,0 +1,13 @@
+language: c
+
+addons:
+  apt:
+    packages:
+      - strace
+
+compiler:
+ - clang
+ - gcc
+
+before_script:
+        autoreconf -i

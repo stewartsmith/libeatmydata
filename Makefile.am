@@ -103,6 +103,8 @@ TESTS = $(check_PROGRAMS)
 
 LOG_COMPILER = ${top_srcdir}/test_run.sh
 
+test: distcheck
+
 check-verbose:
 	@LIBEATMYDATA_TEST_ARGS="v" make check
 
