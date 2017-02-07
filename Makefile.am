@@ -88,6 +88,7 @@ check_PROGRAMS += \
   libeatmydata/test/fsynctest \
   libeatmydata/test/tst-cancel4 \
   libeatmydata/test/tst-key4 \
+  libeatmydata/test/tst-invalidfd \
   libeatmydata/test/eatmydatatest \
   libeatmydata/test/eatmydatatest_largefile
 
