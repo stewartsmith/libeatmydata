@@ -114,6 +114,9 @@ int LIBEATMYDATA_API fsync(int fd)
 {
 	if (eatmydata_is_hungry()) {
 		pthread_testcancel();
+		if (fcntl(fd, F_GETFD) == -1) {
+		  return -1;
+		}
 		errno= 0;
 		return 0;
 	}
@@ -189,6 +192,9 @@ int LIBEATMYDATA_API fdatasync(int fd)
 {
 	if (eatmydata_is_hungry()) {
 		pthread_testcancel();
+		if (fcntl(fd, F_GETFD) == -1) {
+		  return -1;
+		}
 		errno= 0;
 		return 0;
 	}
@@ -212,6 +218,9 @@ int sync_file_range(int fd, off64_t offset, off64_t nbytes, unsigned int flags)
 {
 	if (eatmydata_is_hungry()) {
 		pthread_testcancel();
+		if (fcntl(fd, F_GETFD) == -1) {
+		  return -1;
+		}
 		errno= 0;
 		return 0;
 	}

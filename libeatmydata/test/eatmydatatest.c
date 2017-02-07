@@ -67,9 +67,6 @@ int main(int argc, char** argv)
     fd = open(DATAFILENAME, O_CREAT|O_TRUNC|O_WRONLY, S_IRUSR|S_IWUSR);
     if (fd == -1)
         perror("unable to open " DATAFILENAME);
-    if (close(fd) == -1)
-        perror("unable to close " DATAFILENAME " file descriptor");
-    unlink(DATAFILENAME);
 
     // Now test fsync and friends by feeding them an invalid file descriptor.
     // System implementation should fail with EBADF while libeatmydata
@@ -82,6 +79,9 @@ int main(int argc, char** argv)
         fprintf(stderr, "%d test cases failed\n", failed_tests);
         return 2;
     }
+    if (close(fd) == -1)
+        perror("unable to close " DATAFILENAME " file descriptor");
+    unlink(DATAFILENAME);
 
     return 0;
 }
