@@ -72,8 +72,8 @@ int main(int argc, char** argv)
     // System implementation should fail with EBADF while libeatmydata
     // implementation will succeed.
     TESTCASE(fsync(fd), 0, "system fsync() was not overridden");
-    TESTCASE(fdatasync(fd), 0, "system fdatasync() was not overriden");
-    TESTCASE(msync(0, 1, 1), 0, "system msync() was not overriden");
+    TESTCASE(fdatasync(fd), 0, "system fdatasync() was not overridden");
+    TESTCASE(msync(0, 1, 1), 0, "system msync() was not overridden");
 
     if (failed_tests > 0) {
         fprintf(stderr, "%d test cases failed\n", failed_tests);
