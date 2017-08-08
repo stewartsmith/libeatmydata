@@ -14,6 +14,7 @@
  * END LICENSE */
 
 #include "config.h"
+#include "libeatmydata/portability.h"
 #include "libeatmydata/visibility.h"
 
 #undef _FILE_OFFSET_BITS // Hack to get open and open64 on 32bit
@@ -25,21 +26,19 @@
 #include <fcntl.h>
 #include <dlfcn.h>
 #include <stdarg.h>
+#include <stdio.h>
+#ifdef HAVE_PTHREAD_H
 #include <pthread.h>
+#endif
 
 /* 
 #define CHECK_FILE "/tmp/eatmydata"
 */
 
-/*
- * Mac OS X 10.7 doesn't declare fdatasync().
- */
-#if defined HAVE_DECL_FDATASYNC && !HAVE_DECL_FDATASYNC
-int fdatasync(int fd);
-#endif
-
 typedef int (*libc_open_t)(const char*, int, ...);
+#ifdef HAVE_OPEN64
 typedef int (*libc_open64_t)(const char*, int, ...);
+#endif
 typedef int (*libc_fsync_t)(int);
 typedef int (*libc_sync_t)(void);
 typedef int (*libc_fdatasync_t)(int);
@@ -49,7 +48,9 @@ typedef int (*libc_sync_file_range_t)(int, off64_t, off64_t, unsigned int);
 #endif
 
 static libc_open_t libc_open= NULL;
+#ifdef HAVE_OPEN64
 static libc_open64_t libc_open64= NULL;
+#endif
 static libc_fsync_t libc_fsync= NULL;
 static libc_sync_t libc_sync= NULL;
 static libc_fdatasync_t libc_fdatasync= NULL;
@@ -60,8 +61,13 @@ static libc_sync_file_range_t libc_sync_file_range= NULL;
 
 #define ASSIGN_DLSYM_OR_DIE(name)			\
         libc_##name = (libc_##name##_##t)(intptr_t)dlsym(RTLD_NEXT, #name);			\
-        if (!libc_##name || dlerror())				\
-                _exit(1);
+        if (!libc_##name)                       \
+        {                                       \
+                const char *dlerror_str = dlerror();                          \
+                fprintf(stderr, "libeatmydata init error for %s: %s\n", #name,\
+                        dlerror_str ? dlerror_str : "(null)");                \
+                _exit(1);                       \
+        }
 
 #define ASSIGN_DLSYM_IF_EXIST(name)			\
         libc_##name = (libc_##name##_##t)(intptr_t)dlsym(RTLD_NEXT, #name);			\
@@ -77,7 +83,9 @@ void __attribute__ ((constructor)) eatmydata_init(void)
 {
 	initing = 1;
 	ASSIGN_DLSYM_OR_DIE(open);
+#ifdef HAVE_OPEN64
 	ASSIGN_DLSYM_OR_DIE(open64);
+#endif
 	ASSIGN_DLSYM_OR_DIE(fsync);
 	ASSIGN_DLSYM_OR_DIE(sync);
 	ASSIGN_DLSYM_OR_DIE(fdatasync);
@@ -160,7 +168,7 @@ int LIBEATMYDATA_API open(const char* pathname, int flags, ...)
 	return (*libc_open)(pathname,flags,mode);
 }
 
-#ifndef __USE_FILE_OFFSET64
+#if !defined(__USE_FILE_OFFSET64) && defined(HAVE_OPEN64)
 int LIBEATMYDATA_API open64(const char* pathname, int flags, ...)
 {
 	va_list ap;

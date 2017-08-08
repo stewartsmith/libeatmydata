@@ -16,8 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "config.h"
+
 #include <limits.h>
+#ifdef HAVE_PTHREAD_H
 #include <pthread.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

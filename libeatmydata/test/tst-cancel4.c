@@ -23,11 +23,15 @@
 /* NOTE: this tests functionality beyond POSIX.  POSIX does not allow
    exit to be called more than once.  */
 
+#include "config.h"
+
 #define _GNU_SOURCE
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
+#ifdef HAVE_PTHREAD_H
 #include <pthread.h>
+#endif
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>

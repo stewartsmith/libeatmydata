@@ -50,12 +50,25 @@ fi
 ECHO=`which echo`
 export ECHO
 
-# This needs to be set because of broken libtool on OSX
-DYLD_LIBRARY_PATH=libeatmydata/.libs
-export DYLD_LIBRARY_PATH
+if [[ $OSTYPE == *"darwin"* ]]; then
+  ./start_suspended.sh "$1" "$LIBEATMYDATA_TEST_ARGS" &
+  test_pid=$!
+  # Wait for the test program launcher to become suspended
+  while [[ "$(ps -o state= -p $test_pid)" != *"T+"* ]]; do
+        sleep 1
+  done
+  dtruss -p $test_pid 2>> test.result.run &
+  dtruss_pid=$!
+  kill -CONT $test_pid
+  eret=wait $test_pid
+  kill $dtruss_pid
+  wait $dtruss_pid
+else
+  export LD_PRELOAD=./.libs/libeatmydata.so
+  strace -o test.result.run "$1" "$LIBEATMYDATA_TEST_ARGS"
+  eret=$?
+fi
 
-LD_PRELOAD=./.libs/libeatmydata.so DYLD_FORCE_FLAT_NAMESPACE=1 DYLD_INSERT_LIBRARIES=./.libs/libeatmydata.dylib strace -o test.result.run $1 $LIBEATMYDATA_TEST_ARGS
-eret=$?
 if [ $eret != 0 ]; then
 	exit 2;
 fi

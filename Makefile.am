@@ -71,6 +71,7 @@ libeatmydata_la_SOURCES = \
   libeatmydata/libeatmydata.c
 
 noinst_HEADERS += \
+  libeatmydata/portability.h \
   libeatmydata/visibility.h
 
 libeatmydata_la_CFLAGS = \
@@ -86,11 +87,14 @@ libeatmydata_la_LDFLAGS = $(AM_LDFLAGS) -avoid-version
 
 check_PROGRAMS += \
   libeatmydata/test/fsynctest \
-  libeatmydata/test/tst-cancel4 \
   libeatmydata/test/tst-key4 \
   libeatmydata/test/tst-invalidfd \
   libeatmydata/test/eatmydatatest \
   libeatmydata/test/eatmydatatest_largefile
+
+if HAVE_PTHREAD_BARRIERS
+  check_PROGRAMS += libeatmydata/test/tst-cancel4
+endif
 
 libeatmydata_test_tst_cancel4_LDADD= -lpthread
 
