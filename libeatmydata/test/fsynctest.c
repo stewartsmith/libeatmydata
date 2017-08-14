@@ -15,6 +15,8 @@
 
 #include "config.h"
 
+#include "libeatmydata/portability.h"
+
 #include <stdio.h>
 #include <sys/mman.h>
 #include <sys/types.h>

@@ -32,14 +32,24 @@ AC_CONFIG_HEADERS([config.h])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
+AC_CHECK_HEADERS_ONCE(pthread.h)
 
 AC_CHECK_SIZEOF(mode_t)
 AC_CHECK_SIZEOF(int)
+
+AC_CHECK_TYPE(pthread_barrier_t,,,[
+  #ifdef HAVE_PTHREAD_H
+  #include <pthread.h>
+  #endif
+  ])
+
+AM_CONDITIONAL(HAVE_PTHREAD_BARRIERS, [test "x$ac_cv_type_pthread_barrier_t" = xyes])
 
 AC_CHECK_DECLS(fdatasync)
 AC_CHECK_FUNCS(fdatasync)
 AC_CHECK_DECLS(sync_file_range)
 AC_CHECK_FUNCS(sync_file_range)
+AC_CHECK_FUNCS(open64)
 
 AC_CONFIG_FILES(Makefile libeatmydata.spec)
 
