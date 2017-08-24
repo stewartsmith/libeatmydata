@@ -90,7 +90,8 @@ check_PROGRAMS += \
   libeatmydata/test/tst-key4 \
   libeatmydata/test/tst-invalidfd \
   libeatmydata/test/eatmydatatest \
-  libeatmydata/test/eatmydatatest_largefile
+  libeatmydata/test/eatmydatatest_largefile \
+  libeatmydata/test/fcntltest
 
 if HAVE_PTHREAD_BARRIERS
   check_PROGRAMS += libeatmydata/test/tst-cancel4
