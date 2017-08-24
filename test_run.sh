@@ -73,7 +73,13 @@ if [ $eret != 0 ]; then
 	exit 2;
 fi
 
-grep '^[a-z]*sync\|O_SYNC' test.result.run
+SYNC_IN_TRACE='^[a-z]*sync\|O_SYNC'
+if [[ $OSTYPE == *"darwin"* ]]; then
+    # 0x33 == F_FULLFSYNC
+    SYNC_IN_TRACE="$SYNC_IN_TRACE|^fcntl\\\(.*, 0x33"
+fi
+
+grep "$SYNC_IN_TRACE" test.result.run
 ret=$?
 rm test.result.run
 if [ $ret == 1 ]; then

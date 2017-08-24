@@ -46,6 +46,9 @@ typedef int (*libc_msync_t)(void*, size_t, int);
 #ifdef HAVE_SYNC_FILE_RANGE
 typedef int (*libc_sync_file_range_t)(int, off64_t, off64_t, unsigned int);
 #endif
+#if defined(F_FULLFSYNC) && defined(__APPLE__)
+typedef int (*libc_fcntl_t)(int, int, ...);
+#endif
 
 static libc_open_t libc_open= NULL;
 #ifdef HAVE_OPEN64
@@ -57,6 +60,9 @@ static libc_fdatasync_t libc_fdatasync= NULL;
 static libc_msync_t libc_msync= NULL;
 #ifdef HAVE_SYNC_FILE_RANGE
 static libc_sync_file_range_t libc_sync_file_range= NULL;
+#endif
+#if defined(F_FULLFSYNC) && defined(__APPLE__)
+static libc_fcntl_t libc_fcntl= NULL;
 #endif
 
 #define ASSIGN_DLSYM_OR_DIE(name)			\
@@ -92,6 +98,9 @@ void __attribute__ ((constructor)) eatmydata_init(void)
 	ASSIGN_DLSYM_OR_DIE(msync);
 #ifdef HAVE_SYNC_FILE_RANGE
 	ASSIGN_DLSYM_IF_EXIST(sync_file_range);
+#endif
+#if defined(F_FULLFSYNC) && defined(__APPLE__)
+	ASSIGN_DLSYM_OR_DIE(fcntl);
 #endif
 	initing = 0;
 }
@@ -222,7 +231,8 @@ int LIBEATMYDATA_API msync(void *addr, size_t length, int flags)
 }
 
 #ifdef HAVE_SYNC_FILE_RANGE
-int sync_file_range(int fd, off64_t offset, off64_t nbytes, unsigned int flags)
+int LIBEATMYDATA_API sync_file_range(int fd, off64_t offset, off64_t nbytes,
+				     unsigned int flags)
 {
 	if (eatmydata_is_hungry()) {
 		pthread_testcancel();
@@ -235,4 +245,31 @@ int sync_file_range(int fd, off64_t offset, off64_t nbytes, unsigned int flags)
 
 	return (libc_sync_file_range)(fd, offset, nbytes, flags);
 }
+#endif
+
+#if defined(F_FULLFSYNC) && defined(__APPLE__)
+
+/* fcntl does not have a va_list version. We have to trust this one seen in
+public Darwin sources:
+int __FCNTL(int, int, void *); */
+
+int LIBEATMYDATA_API fcntl(int fd, int cmd, ...)
+{
+	if ((eatmydata_is_hungry() && (cmd == F_FULLFSYNC))) {
+		pthread_testcancel();
+		if (fcntl(fd, F_GETFD) == -1) {
+			return -1;
+		}
+		errno= 0;
+		return 0;
+	} else {
+
+		va_list args;
+		va_start(args, cmd);
+		void * arg= va_arg(args, void *);
+		va_end(args);
+		return ((libc_fcntl)(fd, cmd, arg));
+	}
+}
+
 #endif
