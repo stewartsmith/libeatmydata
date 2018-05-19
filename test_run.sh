@@ -57,7 +57,7 @@ if [[ $OSTYPE == *"darwin"* ]]; then
   while [[ "$(ps -o state= -p $test_pid)" != *"T+"* ]]; do
         sleep 1
   done
-  dtruss -p $test_pid 2>> test.result.run &
+  dtruss -p $test_pid 2>> $name-test.result.run &
   dtruss_pid=$!
   kill -CONT $test_pid
   eret=wait $test_pid
@@ -65,7 +65,7 @@ if [[ $OSTYPE == *"darwin"* ]]; then
   wait $dtruss_pid
 else
   export LD_PRELOAD=./.libs/libeatmydata.so
-  strace -o test.result.run "$1" "$LIBEATMYDATA_TEST_ARGS"
+  strace -o $name-test.result.run "$1" "$LIBEATMYDATA_TEST_ARGS"
   eret=$?
 fi
 
@@ -79,9 +79,9 @@ if [[ $OSTYPE == *"darwin"* ]]; then
     SYNC_IN_TRACE="$SYNC_IN_TRACE|^fcntl\\\(.*, 0x33"
 fi
 
-grep "$SYNC_IN_TRACE" test.result.run
+grep "$SYNC_IN_TRACE" $name-test.result.run
 ret=$?
-rm test.result.run
+rm $name-test.result.run
 if [ $ret == 1 ]; then
 	exit 0;
 else
