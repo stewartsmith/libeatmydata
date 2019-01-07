@@ -30,6 +30,7 @@
 #ifdef HAVE_PTHREAD_H
 #include <pthread.h>
 #endif
+#include <stdlib.h>
 
 /* 
 #define CHECK_FILE "/tmp/eatmydata"
@@ -49,6 +50,7 @@ typedef int (*libc_sync_file_range_t)(int, off64_t, off64_t, unsigned int);
 #if defined(F_FULLFSYNC) && defined(__APPLE__)
 typedef int (*libc_fcntl_t)(int, int, ...);
 #endif
+typedef void (*libc_exit_t)(int);
 
 static libc_open_t libc_open= NULL;
 #ifdef HAVE_OPEN64
@@ -64,6 +66,10 @@ static libc_sync_file_range_t libc_sync_file_range= NULL;
 #if defined(F_FULLFSYNC) && defined(__APPLE__)
 static libc_fcntl_t libc_fcntl= NULL;
 #endif
+static libc_exit_t libc_exit= NULL;
+
+static u_int64_t nosyncs = 0;
+static int endsync_done = 0;
 
 #define ASSIGN_DLSYM_OR_DIE(name)			\
         libc_##name = (libc_##name##_##t)(intptr_t)dlsym(RTLD_NEXT, #name);			\
@@ -84,6 +90,7 @@ int LIBEATMYDATA_API msync(void *addr, size_t length, int flags);
 static int initing = 0;
 
 void __attribute__ ((constructor)) eatmydata_init(void);
+void __attribute__ ((destructor)) eatmydata_finish(void);
 
 void __attribute__ ((constructor)) eatmydata_init(void)
 {
@@ -102,7 +109,20 @@ void __attribute__ ((constructor)) eatmydata_init(void)
 #if defined(F_FULLFSYNC) && defined(__APPLE__)
 	ASSIGN_DLSYM_OR_DIE(fcntl);
 #endif
+	ASSIGN_DLSYM_OR_DIE(exit);
 	initing = 0;
+}
+
+void __attribute__ ((destructor)) eatmydata_finish(void)
+{
+	if (nosyncs && getenv("EATMYDATA_VERBOSE")) {
+        fprintf(stderr, "eatmydata swallowed %llu times\n", nosyncs);
+    }
+    if (!endsync_done && nosyncs) {
+        if (getenv("EATMYDATA_END_SYNC")) {
+            (*libc_sync)();
+        }
+    }
 }
 
 static int eatmydata_is_hungry(void)
@@ -130,6 +150,7 @@ static int eatmydata_is_hungry(void)
 int LIBEATMYDATA_API fsync(int fd)
 {
 	if (eatmydata_is_hungry()) {
+        nosyncs += 1;
 		pthread_testcancel();
 		if (fcntl(fd, F_GETFD) == -1) {
 		  return -1;
@@ -145,6 +166,7 @@ int LIBEATMYDATA_API fsync(int fd)
 void LIBEATMYDATA_API sync(void)
 {
 	if (eatmydata_is_hungry()) {
+        nosyncs += 1;
 		return;
 	}
 
@@ -171,8 +193,10 @@ int LIBEATMYDATA_API open(const char* pathname, int flags, ...)
 		return -1;
 	}
 
-	if (eatmydata_is_hungry())
+	if (eatmydata_is_hungry()) {
 		flags &= ~(O_SYNC|O_DSYNC);
+        nosyncs += 1;
+    }
 
 	return (*libc_open)(pathname,flags,mode);
 }
@@ -198,8 +222,10 @@ int LIBEATMYDATA_API open64(const char* pathname, int flags, ...)
 		return -1;
 	}
 
-	if (eatmydata_is_hungry())
+	if (eatmydata_is_hungry()) {
 		flags &= ~(O_SYNC|O_DSYNC);
+        nosyncs += 1;
+    }
 
 	return (*libc_open64)(pathname,flags,mode);
 }
@@ -208,6 +234,7 @@ int LIBEATMYDATA_API open64(const char* pathname, int flags, ...)
 int LIBEATMYDATA_API fdatasync(int fd)
 {
 	if (eatmydata_is_hungry()) {
+        nosyncs += 1;
 		pthread_testcancel();
 		if (fcntl(fd, F_GETFD) == -1) {
 		  return -1;
@@ -222,6 +249,7 @@ int LIBEATMYDATA_API fdatasync(int fd)
 int LIBEATMYDATA_API msync(void *addr, size_t length, int flags)
 {
 	if (eatmydata_is_hungry()) {
+        nosyncs += 1;
 		pthread_testcancel();
 		errno= 0;
 		return 0;
@@ -235,6 +263,7 @@ int LIBEATMYDATA_API sync_file_range(int fd, off64_t offset, off64_t nbytes,
 				     unsigned int flags)
 {
 	if (eatmydata_is_hungry()) {
+        nosyncs += 1;
 		pthread_testcancel();
 		if (fcntl(fd, F_GETFD) == -1) {
 		  return -1;
@@ -256,6 +285,7 @@ int __FCNTL(int, int, void *); */
 int LIBEATMYDATA_API fcntl(int fd, int cmd, ...)
 {
 	if ((eatmydata_is_hungry() && (cmd == F_FULLFSYNC))) {
+        nosyncs += 1;
 		if (fcntl(fd, F_GETFD) == -1) {
 			return -1;
 		}
@@ -272,3 +302,19 @@ int LIBEATMYDATA_API fcntl(int fd, int cmd, ...)
 }
 
 #endif
+
+void LIBEATMYDATA_API exit(int status)
+{
+	if (eatmydata_is_hungry() && nosyncs) {
+        if (getenv("EATMYDATA_END_SYNC")) {
+            (*libc_sync)();
+            endsync_done = 1;
+        }
+	}
+	if (nosyncs && getenv("EATMYDATA_VERBOSE")) {
+        fprintf(stderr, "eatmydata swallowed %llu times\n", nosyncs);
+        nosyncs = 0;
+    }
+
+	(*libc_exit)(status);
+}
