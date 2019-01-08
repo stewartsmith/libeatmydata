@@ -121,11 +121,12 @@ void __attribute__ ((constructor)) eatmydata_init(int argc, char **argv, char **
 
 void __attribute__ ((destructor)) eatmydata_finish(void)
 {
-	if (nosyncs && getenv("EATMYDATA_VERBOSE")) {
+	if (getenv("EATMYDATA_VERBOSE") && nosyncs) {
+	   const u_int64_t n = nosyncs;
         if (progName) {
             fprintf(stderr, "%s: ", basename(progName));
         }
-        fprintf(stderr, "eatmydata swallowed %llu time(s)\n", nosyncs);
+        fprintf(stderr, "eatmydata swallowed %llu time(s)\n", n);
     }
     if (!endsync_done && nosyncs) {
         if (getenv("EATMYDATA_END_SYNC")) {
@@ -247,7 +248,7 @@ int LIBEATMYDATA_API open64(const char* pathname, int flags, ...)
 int LIBEATMYDATA_API fdatasync(int fd)
 {
 	if (eatmydata_is_hungry()) {
-        nosyncs += 1;
+          nosyncs += 1;
 		pthread_testcancel();
 		if (fcntl(fd, F_GETFD) == -1) {
 		  return -1;
@@ -262,7 +263,7 @@ int LIBEATMYDATA_API fdatasync(int fd)
 int LIBEATMYDATA_API msync(void *addr, size_t length, int flags)
 {
 	if (eatmydata_is_hungry()) {
-        nosyncs += 1;
+          nosyncs += 1;
 		pthread_testcancel();
 		errno= 0;
 		return 0;
@@ -298,7 +299,7 @@ int __FCNTL(int, int, void *); */
 int LIBEATMYDATA_API fcntl(int fd, int cmd, ...)
 {
 	if ((eatmydata_is_hungry() && (cmd == F_FULLFSYNC))) {
-        nosyncs += 1;
+          nosyncs += 1;
 		if (fcntl(fd, F_GETFD) == -1) {
 			return -1;
 		}
@@ -324,14 +325,13 @@ void LIBEATMYDATA_API exit(int status)
             endsync_done = 1;
         }
 	}
-	if (nosyncs && getenv("EATMYDATA_VERBOSE")) {
+	if (getenv("EATMYDATA_VERBOSE") && nosyncs) {
+	   const u_int64_t n = nosyncs;
+        nosyncs = 0;
         if (progName) {
             fprintf(stderr, "%s: ", basename(progName));
-            free(progName);
-            progName = NULL;
         }
-        fprintf(stderr, "eatmydata swallowed %llu time(s)\n", nosyncs);
-        nosyncs = 0;
+        fprintf(stderr, "eatmydata swallowed %llu time(s)\n", n);
     }
     if (progName) {
         free(progName);
