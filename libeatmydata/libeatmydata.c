@@ -31,6 +31,8 @@
 #include <pthread.h>
 #endif
 #include <stdlib.h>
+#include <libgen.h>
+#include <string.h>
 
 /* 
 #define CHECK_FILE "/tmp/eatmydata"
@@ -70,6 +72,7 @@ static libc_exit_t libc_exit= NULL;
 
 static u_int64_t nosyncs = 0;
 static int endsync_done = 0;
+static char *progName = NULL;
 
 #define ASSIGN_DLSYM_OR_DIE(name)			\
         libc_##name = (libc_##name##_##t)(intptr_t)dlsym(RTLD_NEXT, #name);			\
@@ -89,11 +92,14 @@ static int endsync_done = 0;
 int LIBEATMYDATA_API msync(void *addr, size_t length, int flags);
 static int initing = 0;
 
-void __attribute__ ((constructor)) eatmydata_init(void);
+void __attribute__ ((constructor)) eatmydata_init(int argc, char **argv, char **env);
 void __attribute__ ((destructor)) eatmydata_finish(void);
 
-void __attribute__ ((constructor)) eatmydata_init(void)
+void __attribute__ ((constructor)) eatmydata_init(int argc, char **argv, char **env)
 {
+    if (argv && argc && argv[0] && !progName) {
+        progName = strdup(argv[0]);
+    }
 	initing = 1;
 	ASSIGN_DLSYM_OR_DIE(open);
 #ifdef HAVE_OPEN64
@@ -116,12 +122,19 @@ void __attribute__ ((constructor)) eatmydata_init(void)
 void __attribute__ ((destructor)) eatmydata_finish(void)
 {
 	if (nosyncs && getenv("EATMYDATA_VERBOSE")) {
-        fprintf(stderr, "eatmydata swallowed %llu times\n", nosyncs);
+        if (progName) {
+            fprintf(stderr, "%s: ", basename(progName));
+        }
+        fprintf(stderr, "eatmydata swallowed %llu time(s)\n", nosyncs);
     }
     if (!endsync_done && nosyncs) {
         if (getenv("EATMYDATA_END_SYNC")) {
             (*libc_sync)();
         }
+    }
+    if (progName) {
+        free(progName);
+        progName = NULL;
     }
 }
 
@@ -129,7 +142,7 @@ static int eatmydata_is_hungry(void)
 {
 	/* Init here, as it is called before any libc functions */
 	if(!libc_open)
-		eatmydata_init();
+		eatmydata_init(0, NULL, NULL);
 
 #ifdef CHECK_FILE
 	static struct stat buf;
@@ -312,8 +325,17 @@ void LIBEATMYDATA_API exit(int status)
         }
 	}
 	if (nosyncs && getenv("EATMYDATA_VERBOSE")) {
-        fprintf(stderr, "eatmydata swallowed %llu times\n", nosyncs);
+        if (progName) {
+            fprintf(stderr, "%s: ", basename(progName));
+            free(progName);
+            progName = NULL;
+        }
+        fprintf(stderr, "eatmydata swallowed %llu time(s)\n", nosyncs);
         nosyncs = 0;
+    }
+    if (progName) {
+        free(progName);
+        progName = NULL;
     }
 
 	(*libc_exit)(status);
