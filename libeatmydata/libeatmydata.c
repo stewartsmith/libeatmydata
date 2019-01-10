@@ -42,6 +42,7 @@ typedef int (*libc_open_t)(const char*, int, ...);
 #ifdef HAVE_OPEN64
 typedef int (*libc_open64_t)(const char*, int, ...);
 #endif
+typedef int (*libc_close_t)(int);
 typedef int (*libc_fsync_t)(int);
 typedef int (*libc_sync_t)(void);
 typedef int (*libc_fdatasync_t)(int);
@@ -53,11 +54,13 @@ typedef int (*libc_sync_file_range_t)(int, off64_t, off64_t, unsigned int);
 typedef int (*libc_fcntl_t)(int, int, ...);
 #endif
 typedef void (*libc_exit_t)(int);
+typedef void (*libc__exit_t)(int);
 
 static libc_open_t libc_open = NULL;
 #ifdef HAVE_OPEN64
 static libc_open64_t libc_open64 = NULL;
 #endif
+static libc_close_t libc_close = NULL;
 static libc_fsync_t libc_fsync = NULL;
 static libc_sync_t libc_sync = NULL;
 static libc_fdatasync_t libc_fdatasync = NULL;
@@ -69,9 +72,10 @@ static libc_sync_file_range_t libc_sync_file_range = NULL;
 static libc_fcntl_t libc_fcntl = NULL;
 #endif
 static libc_exit_t libc_exit = NULL;
+static libc_exit_t libc__exit = NULL;
 
-static u_int64_t nosyncs = 0;
-static int do_endsync = 0, endsync_done = -1;
+static u_int64_t nosyncs = 0, endsyncs = 0;
+static int do_endsync = 0, endsync_done = -1, exiting = 0;
 static char* progName = NULL;
 
 #define ASSIGN_DLSYM_OR_DIE(name)			\
@@ -105,6 +109,7 @@ void __attribute__((constructor)) eatmydata_init(int argc, char** argv, char** e
 #ifdef HAVE_OPEN64
 	ASSIGN_DLSYM_OR_DIE(open64);
 #endif
+	ASSIGN_DLSYM_OR_DIE(close);
 	ASSIGN_DLSYM_OR_DIE(fsync);
 	ASSIGN_DLSYM_OR_DIE(sync);
 	ASSIGN_DLSYM_OR_DIE(fdatasync);
@@ -116,12 +121,13 @@ void __attribute__((constructor)) eatmydata_init(int argc, char** argv, char** e
 	ASSIGN_DLSYM_OR_DIE(fcntl);
 #endif
 	ASSIGN_DLSYM_OR_DIE(exit);
+	ASSIGN_DLSYM_OR_DIE(_exit);
 
 	if (endsync_done < 0) {
 		const char* c = getenv("EATMYDATA_END_SYNC");
 		if (c) {
 			do_endsync = atoi(c);
-			if (do_endsync < 2) {
+			if (do_endsync == 1) {
 				errno = 0;
 				unsetenv("EATMYDATA_END_SYNC");
 				if (errno) {
@@ -142,10 +148,14 @@ void __attribute__((destructor)) eatmydata_finish(void)
 		if (progName) {
 			fprintf(stderr, "%s: ", basename(progName));
 		}
-		fprintf(stderr, "eatmydata swallowed %llu time(s)\n", n);
+		fprintf(stderr, "eatmydata swallowed %llu time(s)", n);
+		if (endsyncs) {
+			fprintf(stderr, "and rejected %llu time(s) at exit", endsyncs);
+		}
+		fputs("\n", stderr);
 	}
 	if (endsync_done <= 0 && nosyncs) {
-		if (do_endsync) {
+		if (do_endsync > 0) {
 			(*libc_sync)();
 		}
 	}
@@ -172,9 +182,27 @@ static int eatmydata_is_hungry(void)
 	/* Treat any error as if file doesn't exist, for safety */
 	return !stat_ret;
 #else
-	/* Always hungry! */
-	return 1;
+	/* Always hungry, unless maybe after exit() has been called! */
+// 	return (do_endsync < 0) ? 0 : 1;
+	if (!do_endsync) {
+		return 1;
+	} else {
+		if (exiting && do_endsync < 0) {
+			endsyncs += 1;
+			return 0;
+		}
+		return 1;
+	}
 #endif
+}
+
+int LIBEATMYDATA_API close(int fd)
+{
+	if (exiting && do_endsync < 0) {
+		(*libc_fsync)(fd);
+		endsyncs += 1;
+	}
+	return (*libc_close)(fd);
 }
 
 int LIBEATMYDATA_API fsync(int fd)
@@ -333,26 +361,44 @@ int LIBEATMYDATA_API fcntl(int fd, int cmd, ...)
 
 #endif
 
-void LIBEATMYDATA_API exit(int status)
+static inline void init_exit(const char *fname)
 {
 	if (eatmydata_is_hungry() && nosyncs) {
-		if (do_endsync) {
+		if (do_endsync > 0) {
 			(*libc_sync)();
 			endsync_done = 1;
 		}
 	}
+	exiting = 1;
 	if (getenv("EATMYDATA_VERBOSE") && nosyncs) {
 		const u_int64_t n = nosyncs;
 		nosyncs = 0;
 		if (progName) {
 			fprintf(stderr, "%s: ", basename(progName));
 		}
-		fprintf(stderr, "eatmydata swallowed %llu time(s)\n", n);
+		fprintf(stderr, "eatmydata swallowed %llu time(s) before %s() was called", n, fname);
+		fputs( (do_endsync < 0)?  " (disabled now)\n" : "\n", stderr);
 	}
 	if (progName) {
 		free(progName);
 		progName = NULL;
 	}
+}
+
+void LIBEATMYDATA_API exit(int status)
+{
+	if (!exiting) {
+		init_exit("exit");
+	}
 
 	(*libc_exit)(status);
+}
+
+void LIBEATMYDATA_API _exit(int status)
+{
+	if (!exiting) {
+		init_exit("_exit");
+	}
+
+	(*libc__exit)(status);
 }
