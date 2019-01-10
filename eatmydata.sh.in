@@ -38,19 +38,31 @@ eatmydata_exec()
         # $cmd does not contain '/'. Look in $PATH avoiding loops with self.
         local self save_ifs path exe ok
 
-        self="`readlink -f "$0"`"
-        save_ifs="$IFS"
-        IFS=":"
         ok=""
-        for path in $PATH; do
-            exe="${path}/$cmd"
-            # Avoid loops with self
-            if [ -x "$exe" ] && [ "`readlink -f "$exe"`" != "$self" ]; then
-                ok="yes"
-                break
-            fi
-        done
-        IFS="$save_ifs"
+        exe="`which "${cmd}"`"
+        if [ -x "$exe" ] ;then
+             ok="yes"
+        else
+            case "`uname -s`" in
+                Darwin)
+                    self="`readlink "$0"`"
+                    ;;
+                *)
+                    self="`readlink -f "$0"`"
+            esac
+            save_ifs="$IFS"
+            IFS=":"
+            ok=""
+            for path in $PATH; do
+                exe="${path}/$cmd"
+                # Avoid loops with self
+                if [ -x "$exe" ] && [ "`readlink -f "$exe"`" != "$self" ]; then
+                    ok="yes"
+                    break
+                fi
+            done
+            IFS="$save_ifs"
+        fi
         if [ -n "$ok" ]; then
             cmd="$exe"
         else
@@ -60,8 +72,12 @@ eatmydata_exec()
 
     # Preload libeatmydata
     if [ `uname` = "Darwin" ]; then
-	export DYLD_FORCE_FLAT_NAMESPACE=1
-	export DYLD_INSERT_LIBRARIES="$libeatmydata"
+        export DYLD_FORCE_FLAT_NAMESPACE=1
+        if [ -n "$DYLD_INSERT_LIBRARIES" ]; then
+            export DYLD_INSERT_LIBRARIES="${libeatmydata}:${DYLD_INSERT_LIBRARIES}"
+        else
+            export DYLD_INSERT_LIBRARIES="$libeatmydata"
+        fi
     else
         if [ -n "$LD_PRELOAD" ]; then
             export LD_PRELOAD="$libeatmydata $LD_PRELOAD"
