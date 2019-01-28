@@ -51,6 +51,8 @@ AC_CHECK_DECLS(sync_file_range)
 AC_CHECK_FUNCS(sync_file_range)
 AC_CHECK_FUNCS(open64)
 
+AX_TLS(:,:)
+
 AC_CONFIG_FILES(Makefile libeatmydata.spec)
 
 AC_OUTPUT
