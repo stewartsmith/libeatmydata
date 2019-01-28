@@ -50,19 +50,23 @@ typedef int (*libc_sync_file_range_t)(int, off64_t, off64_t, unsigned int);
 typedef int (*libc_fcntl_t)(int, int, ...);
 #endif
 
-static libc_open_t libc_open= NULL;
+/* All the following are thread-local, to avoid initialization races between
+ * threads. */
+static TLS int init_running = 0;
+static TLS int init_complete = 0;
+static TLS libc_open_t libc_open= NULL;
 #ifdef HAVE_OPEN64
-static libc_open64_t libc_open64= NULL;
+static TLS libc_open64_t libc_open64= NULL;
 #endif
-static libc_fsync_t libc_fsync= NULL;
-static libc_sync_t libc_sync= NULL;
-static libc_fdatasync_t libc_fdatasync= NULL;
-static libc_msync_t libc_msync= NULL;
+static TLS libc_fsync_t libc_fsync= NULL;
+static TLS libc_sync_t libc_sync= NULL;
+static TLS libc_fdatasync_t libc_fdatasync= NULL;
+static TLS libc_msync_t libc_msync= NULL;
 #ifdef HAVE_SYNC_FILE_RANGE
-static libc_sync_file_range_t libc_sync_file_range= NULL;
+static TLS libc_sync_file_range_t libc_sync_file_range= NULL;
 #endif
 #if defined(F_FULLFSYNC) && defined(__APPLE__)
-static libc_fcntl_t libc_fcntl= NULL;
+static TLS libc_fcntl_t libc_fcntl= NULL;
 #endif
 
 #define ASSIGN_DLSYM_OR_DIE(name)			\
@@ -81,13 +85,12 @@ static libc_fcntl_t libc_fcntl= NULL;
 
 
 int LIBEATMYDATA_API msync(void *addr, size_t length, int flags);
-static int initing = 0;
 
 void __attribute__ ((constructor)) eatmydata_init(void);
 
 void __attribute__ ((constructor)) eatmydata_init(void)
 {
-	initing = 1;
+	init_running++;
 	ASSIGN_DLSYM_OR_DIE(open);
 #ifdef HAVE_OPEN64
 	ASSIGN_DLSYM_OR_DIE(open64);
@@ -102,13 +105,14 @@ void __attribute__ ((constructor)) eatmydata_init(void)
 #if defined(F_FULLFSYNC) && defined(__APPLE__)
 	ASSIGN_DLSYM_OR_DIE(fcntl);
 #endif
-	initing = 0;
+	init_running--;
+	init_complete++;
 }
 
 static int eatmydata_is_hungry(void)
 {
 	/* Init here, as it is called before any libc functions */
-	if(!libc_open)
+	if(!init_complete)
 		eatmydata_init();
 
 #ifdef CHECK_FILE
@@ -164,9 +168,9 @@ int LIBEATMYDATA_API open(const char* pathname, int flags, ...)
 #endif
 	va_end(ap);
 
-	/* In pthread environments the dlsym() may call our open(). */
-	/* We simply ignore it because libc is already loaded       */
-	if (initing) {
+	/* If we get called recursively during initialization (which should
+	 * be rare but might happen), just fail. */
+	if (init_running > 0) {
 		errno = EFAULT;
 		return -1;
 	}
@@ -191,9 +195,9 @@ int LIBEATMYDATA_API open64(const char* pathname, int flags, ...)
 #endif
 	va_end(ap);
 
-	/* In pthread environments the dlsym() may call our open(). */
-	/* We simply ignore it because libc is already loaded       */
-	if (initing) {
+	/* If we get called recursively during initialization (which should
+	 * be rare but might happen), just fail. */
+	if (init_running > 0) {
 		errno = EFAULT;
 		return -1;
 	}
