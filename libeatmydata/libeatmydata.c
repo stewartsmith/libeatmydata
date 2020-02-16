@@ -184,6 +184,17 @@ int LIBEATMYDATA_API open(const char* pathname, int flags, ...)
 }
 
 #if !defined(__USE_FILE_OFFSET64) && defined(HAVE_OPEN64)
+
+/*
+ * Musl libc does this in `fcntl.h`:
+ *
+ *    #define open64 open
+ *
+ * It's hard to detect this situation, but we can avoid a compile failure
+ * by undefining it.
+ */
+#undef open64
+
 int LIBEATMYDATA_API open64(const char* pathname, int flags, ...)
 {
 	va_list ap;
