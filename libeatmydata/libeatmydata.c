@@ -79,6 +79,7 @@ static libc_fcntl_t libc_fcntl= NULL;
         libc_##name = (libc_##name##_##t)(intptr_t)dlsym(RTLD_NEXT, #name);			\
 						   dlerror();
 
+#pragma weak pthread_testcancel
 
 int LIBEATMYDATA_API msync(void *addr, size_t length, int flags);
 static int initing = 0;
@@ -130,7 +131,8 @@ static int eatmydata_is_hungry(void)
 int LIBEATMYDATA_API fsync(int fd)
 {
 	if (eatmydata_is_hungry()) {
-		pthread_testcancel();
+		if (pthread_testcancel)
+			pthread_testcancel();
 		if (fcntl(fd, F_GETFD) == -1) {
 		  return -1;
 		}
@@ -208,7 +210,8 @@ int LIBEATMYDATA_API open64(const char* pathname, int flags, ...)
 int LIBEATMYDATA_API fdatasync(int fd)
 {
 	if (eatmydata_is_hungry()) {
-		pthread_testcancel();
+		if (pthread_testcancel)
+			pthread_testcancel();
 		if (fcntl(fd, F_GETFD) == -1) {
 		  return -1;
 		}
@@ -222,7 +225,8 @@ int LIBEATMYDATA_API fdatasync(int fd)
 int LIBEATMYDATA_API msync(void *addr, size_t length, int flags)
 {
 	if (eatmydata_is_hungry()) {
-		pthread_testcancel();
+		if (pthread_testcancel)
+			pthread_testcancel();
 		errno= 0;
 		return 0;
 	}
@@ -235,7 +239,8 @@ int LIBEATMYDATA_API sync_file_range(int fd, off64_t offset, off64_t nbytes,
 				     unsigned int flags)
 {
 	if (eatmydata_is_hungry()) {
-		pthread_testcancel();
+		if (pthread_testcancel)
+			pthread_testcancel();
 		if (fcntl(fd, F_GETFD) == -1) {
 		  return -1;
 		}

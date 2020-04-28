@@ -79,7 +79,7 @@ libeatmydata_la_CFLAGS = \
   $(NO_WERROR) \
 	-DBUILDING_LIBEATMYDATA
 
-libeatmydata_la_LIBADD = $(LIBDL_LIBS) -lpthread -ldl
+libeatmydata_la_LIBADD = $(LIBDL_LIBS) -ldl
 libeatmydata_la_LDFLAGS = $(AM_LDFLAGS) -avoid-version
 
 #install-exec-hook:
