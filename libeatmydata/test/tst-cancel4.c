@@ -117,21 +117,21 @@ tf_fsync (void *arg)
   tempfd = mkostemp(fname, O_RDONLY);
   if (tempfd == -1)
     {
-      printf ("%s: cannot open %s\n", __FUNCTION__, fname);
+      printf ("%s: cannot open %s\n", __func__, fname);
       exit (1);
     }
 
   int r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
-      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      printf ("%s: barrier_wait failed\n", __func__);
       exit (1);
     }
 
   r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
-      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      printf ("%s: 2nd barrier_wait failed\n", __func__);
       exit (1);
     }
 
@@ -141,7 +141,7 @@ tf_fsync (void *arg)
 
   pthread_cleanup_pop (0);
 
-  printf ("%s: fsync returned\n", __FUNCTION__);
+  printf ("%s: fsync returned\n", __func__);
 
   unlink(fname);
   free(fname);
@@ -163,21 +163,21 @@ tf_fdatasync (void *arg)
   tempfd = mkostemp(fname, O_RDONLY);
   if (tempfd == -1)
     {
-      printf ("%s: cannot open %s\n", __FUNCTION__, fname);
+      printf ("%s: cannot open %s\n", __func__, fname);
       exit (1);
     }
 
   int r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
-      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      printf ("%s: barrier_wait failed\n", __func__);
       exit (1);
     }
 
   r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
-      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      printf ("%s: 2nd barrier_wait failed\n", __func__);
       exit (1);
     }
 
@@ -187,7 +187,7 @@ tf_fdatasync (void *arg)
 
   pthread_cleanup_pop (0);
 
-  printf ("%s: fdatasync returned\n", __FUNCTION__);
+  printf ("%s: fdatasync returned\n", __func__);
 
   unlink(fname);
   free(fname);
@@ -209,28 +209,28 @@ tf_msync (void *arg)
   tempfd = mkostemp(fname, O_RDONLY);
   if (tempfd == -1)
     {
-      printf ("%s: cannot open %s\n", __FUNCTION__, fname);
+      printf ("%s: cannot open %s\n", __func__, fname);
       exit (1);
     }
 
   void *p = mmap (NULL, 10, PROT_READ, MAP_SHARED, tempfd, 0);
   if (p == MAP_FAILED)
     {
-      printf ("%s: mmap failed\n", __FUNCTION__);
+      printf ("%s: mmap failed\n", __func__);
       exit (1);
     }
 
   int r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
-      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      printf ("%s: barrier_wait failed\n", __func__);
       exit (1);
     }
 
   r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
     {
-      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      printf ("%s: 2nd barrier_wait failed\n", __func__);
       exit (1);
     }
 
@@ -240,7 +240,7 @@ tf_msync (void *arg)
 
   pthread_cleanup_pop (0);
 
-  printf ("%s: msync returned\n", __FUNCTION__);
+  printf ("%s: msync returned\n", __func__);
 
   unlink(fname);
   free(fname);
@@ -314,7 +314,7 @@ do_test (void)
       int r = pthread_barrier_wait (&b2);
       if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
 	{
-	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  printf ("%s: barrier_wait failed\n", __func__);
 	  result = 1;
 	  continue;
 	}
@@ -412,7 +412,7 @@ do_test (void)
       int r = pthread_barrier_wait (&b2);
       if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
 	{
-	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  printf ("%s: barrier_wait failed\n", __func__);
 	  result = 1;
 	  continue;
 	}
@@ -427,7 +427,7 @@ do_test (void)
       r = pthread_barrier_wait (&b2);
       if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
 	{
-	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
+	  printf ("%s: barrier_wait failed\n", __func__);
 	  result = 1;
 	  continue;
 	}
