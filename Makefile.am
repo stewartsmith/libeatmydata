@@ -2,7 +2,7 @@
 # Libeatmydata
 #
 ### BEGIN LICENSE
-# Copyright (C) 2008-2010 Stewart Smith <stewart@flamingspork.com>
+# Copyright (C) 2008-2021 Stewart Smith <stewart@flamingspork.com>
 # This program is free software: you can redistribute it and/or modify it 
 # under the terms of the GNU General Public License version 3, as published 
 # by the Free Software Foundation.
@@ -31,6 +31,8 @@ noinst_HEADERS =
 CLEANFILES = $(bin_SCRIPTS) $(libexec_SCRIPTS)
 DISTCLEANFILES = config/top.h
 EXTRA_DIST = \
+  README.md \
+  AUTHORS \
   fsynctest.result \
   test_run.sh \
   eatmydata.in \
@@ -43,7 +45,6 @@ EXTRA_DIST = \
   debian/README.Debian \
   debian/rules \
   debian/source \
-  build_emd_rpm.sh \
   libeatmydata.spec
 
 

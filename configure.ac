@@ -3,7 +3,7 @@
 #
 # Build infrastructure:
 # Copyright (C) 2009-2010 Monty Taylor, Eric Day
-# Copyright (C) 2010-2014 Stewart Smith
+# Copyright (C) 2010-2021 Stewart Smith
 # All rights reserved.
 #
 # Use and distribution licensed under the BSD license.  See
@@ -11,7 +11,7 @@
 #
 
 
-AC_INIT([libeatmydata],[128], [http://www.flamingspork.com/projects/libeatmydata])
+AC_INIT([libeatmydata],[129], [http://www.flamingspork.com/projects/libeatmydata])
 AC_CONFIG_SRCDIR([libeatmydata/libeatmydata.c])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([m4])
