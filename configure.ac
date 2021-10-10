@@ -11,7 +11,7 @@
 #
 
 
-AC_INIT([libeatmydata],[129], [http://www.flamingspork.com/projects/libeatmydata])
+AC_INIT([libeatmydata],[130], [http://www.flamingspork.com/projects/libeatmydata])
 AC_CONFIG_SRCDIR([libeatmydata/libeatmydata.c])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([m4])
@@ -50,6 +50,7 @@ AC_CHECK_FUNCS(fdatasync)
 AC_CHECK_DECLS(sync_file_range)
 AC_CHECK_FUNCS(sync_file_range)
 AC_CHECK_FUNCS(open64)
+AC_CHECK_FUNCS(syncfs)
 
 AX_TLS(:,:)
 

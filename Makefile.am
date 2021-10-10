@@ -92,6 +92,7 @@ check_PROGRAMS += \
   libeatmydata/test/tst-invalidfd \
   libeatmydata/test/eatmydatatest \
   libeatmydata/test/eatmydatatest_largefile \
+  libeatmydata/test/syncfstest \
   libeatmydata/test/fcntltest
 
 if HAVE_PTHREAD_BARRIERS

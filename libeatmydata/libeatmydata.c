@@ -46,6 +46,9 @@ typedef int (*libc_msync_t)(void*, size_t, int);
 #ifdef HAVE_SYNC_FILE_RANGE
 typedef int (*libc_sync_file_range_t)(int, off64_t, off64_t, unsigned int);
 #endif
+#ifdef HAVE_SYNCFS
+typedef int (*libc_syncfs_t)(int);
+#endif
 #if defined(F_FULLFSYNC) && defined(__APPLE__)
 typedef int (*libc_fcntl_t)(int, int, ...);
 #endif
@@ -64,6 +67,9 @@ static TLS libc_fdatasync_t libc_fdatasync= NULL;
 static TLS libc_msync_t libc_msync= NULL;
 #ifdef HAVE_SYNC_FILE_RANGE
 static TLS libc_sync_file_range_t libc_sync_file_range= NULL;
+#endif
+#ifdef HAVE_SYNCFS
+static TLS libc_syncfs_t libc_syncfs= NULL;
 #endif
 #if defined(F_FULLFSYNC) && defined(__APPLE__)
 static TLS libc_fcntl_t libc_fcntl= NULL;
@@ -102,6 +108,9 @@ void __attribute__ ((constructor)) eatmydata_init(void)
 	ASSIGN_DLSYM_OR_DIE(msync);
 #ifdef HAVE_SYNC_FILE_RANGE
 	ASSIGN_DLSYM_IF_EXIST(sync_file_range);
+#endif
+#ifdef HAVE_SYNCFS
+	ASSIGN_DLSYM_IF_EXIST(syncfs);
 #endif
 #if defined(F_FULLFSYNC) && defined(__APPLE__)
 	ASSIGN_DLSYM_OR_DIE(fcntl);
@@ -264,6 +273,24 @@ int LIBEATMYDATA_API sync_file_range(int fd, off64_t offset, off64_t nbytes,
 	}
 
 	return (libc_sync_file_range)(fd, offset, nbytes, flags);
+}
+#endif
+
+#ifdef HAVE_SYNCFS
+int LIBEATMYDATA_API syncfs(int fd)
+{
+	if (eatmydata_is_hungry()) {
+		if (pthread_testcancel)
+			pthread_testcancel();
+		if (fcntl(fd, F_GETFD) == -1) {
+		  errno= EBADF;
+		  return -1;
+		}
+		errno= 0;
+		return 0;
+	}
+
+	return (*libc_syncfs)(fd);
 }
 #endif
 

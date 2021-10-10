@@ -52,6 +52,8 @@ rm -fr %{buildroot}
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sun Oct 10 2021 Stewart Smith <stewart@flamingspork.com> - 130-1
+- version 130, add syncfs() wrapper
 * Sat Apr 10 2021 Stewart Smith <stewart@flamingspork.com> - 129-1
 - Version 129, as always, bug fix release
 * Fri Jul 26 2013 Jaroslav Kortus <jkortus@redhat.com> - 82-1
