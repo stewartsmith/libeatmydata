@@ -30,6 +30,7 @@
 int main(int argc, char* argv[])
 {
 	(void)argc; (void)argv;
+#ifdef HAVE_SYNCFS
 	int fd;
 	int i;
 	ssize_t ret;
@@ -44,5 +45,6 @@ int main(int argc, char* argv[])
 	}
 	close(fd);
 	unlink("syncfstestdata");
+#endif
 	return 0;
 }
