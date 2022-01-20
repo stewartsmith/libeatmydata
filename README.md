@@ -11,6 +11,28 @@ not required.
 
 see http://www.flamingspork.com/projects/libeatmydata
 
+Installing
+------------
+
+Debian/Ubuntu and friends:
+```
+apt install eatmydata
+```
+
+To build from source, you will need `autoconf`, `autoconf-archive`, `automake`, `libtool`, and a compiler (say, `gcc`).
+
+Then, build and install like so:
+```
+git clone https://github.com/stewartsmith/libeatmydata.git # (or extract from source tarball)
+cd libeatmydata
+autoreconf -i # (if building from git only)
+./configure
+make
+make check
+sudo make install
+```
+
+
 Usage
 -----
 
@@ -67,6 +89,6 @@ You can watch a video recording of this talk at:
 Copyright
 ---------
 
-(C)2007-2016 Stewart Smith
+(C)2007-2022 Stewart Smith
 and other contributors (see AUTHORS)
 See LICENSE for full text of GPLv3
