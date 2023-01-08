@@ -20,6 +20,11 @@
 #include <unistd.h>
 #include <assert.h>
 
+#ifdef HAVE_SYNC_FILE_RANGE
+#define _GNU_SOURCE
+#include <fcntl.h>
+#endif
+
 int main()
 {
 	int fd = 42;
