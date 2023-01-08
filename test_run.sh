@@ -51,7 +51,7 @@ ECHO=`which echo`
 export ECHO
 
 if [[ $OSTYPE == *"darwin"* ]]; then
-  ./start_suspended.sh "$1" "$LIBEATMYDATA_TEST_ARGS" &
+  ${srcdir}/start_suspended.sh "$1" "$LIBEATMYDATA_TEST_ARGS" &
   test_pid=$!
   # Wait for the test program launcher to become suspended
   while [[ "$(ps -o state= -p $test_pid)" != *"T+"* ]]; do

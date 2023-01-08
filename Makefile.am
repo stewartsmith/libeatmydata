@@ -45,7 +45,8 @@ EXTRA_DIST = \
   debian/README.Debian \
   debian/rules \
   debian/source \
-  libeatmydata.spec
+  libeatmydata.spec \
+  start_suspended.sh
 
 
 bin_SCRIPTS = eatmydata
