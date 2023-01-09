@@ -13,6 +13,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  * END LICENSE */
 
+#include "config.h"
 #include "libeatmydata/portability.h"
 
 #include <stdio.h>
@@ -21,7 +22,6 @@
 #include <assert.h>
 
 #ifdef HAVE_SYNC_FILE_RANGE
-#define _GNU_SOURCE
 #include <fcntl.h>
 #endif
 
