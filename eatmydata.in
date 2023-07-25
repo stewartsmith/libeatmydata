@@ -31,9 +31,19 @@ usage()
 
 # Detect operation mode. If this script is run via symlink, look for basename
 # in the PATH and execute it.
+cmd=
 if [ -L "$0" ]; then
     # Symlink mode. Get command to execute from the basename of $0.
     cmd="`basename "$0"`"
+    if [ "$cmd" = "eatmydata" ] ; then
+	# Don't engage symlink mode for a symlink from "eatmydata" though as
+	# that breaks with how homebrew installs each package in its own
+	# prefix and symlinks the binaries into a common "bin" directory.
+	cmd=
+    fi
+fi
+
+if [ -n "$cmd" ] ; then
     set -- "$cmd" "$@"
 else
     # Normal mode
