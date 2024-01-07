@@ -84,7 +84,7 @@ routines.
 You can watch a video recording of this talk at:
 
 - https://youtu.be/LMe7hf2G1po
-- http://www.linux.org.au/conf/2007/talk/278.html
+- [http://www.linux.org.au/conf/2007/talk/278.html](https://web.archive.org/web/20130504133047/http://www.linux.org.au/conf/2007/talk/278.html)
 
 Copyright
 ---------
